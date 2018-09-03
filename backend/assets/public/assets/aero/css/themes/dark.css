@@ -1,0 +1,108 @@
+.theme {
+  background-color: #424242; }
+
+body {
+  background-color: #424242;
+  color: #FFF;
+  /*
+	 * Titles
+	 */
+  /*
+	 * Page header
+	 */
+  /*
+	 * Table of contents
+	 */
+  /*
+	 * Buttons
+	 */
+  /*
+	 * Forms
+	 */
+  /*
+	 * Codes
+	 */
+  /*
+	 * APPs - CRUD
+	 */
+  /*
+	 * APPs - Pricing Table
+	 */
+  /*
+	 * Error page
+	 */
+  /*
+	 * Datatables
+	 */
+  /*
+	 * Pagination
+	 */ }
+  body > #theme-gradient {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    left: 0px;
+    bottom: 0px;
+    z-index: -1;
+    background: #424242;
+    background: -moz-linear-gradient(-45deg, #424242 0%, #494949 100%);
+    background: -webkit-gradient(left top, right bottom, color-stop(0%, #424242), color-stop(100%, #494949));
+    background: -webkit-linear-gradient(-45deg, #424242 0%, #494949 100%);
+    background: -o-linear-gradient(-45deg, #424242 0%, #494949 100%);
+    background: -ms-linear-gradient(-45deg, #424242 0%, #494949 100%);
+    background: linear-gradient(135deg, #424242 0%, #494949 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#424242', endColorstr='#494949', GradientType=1 ); }
+  body h1, body h2, body h3, body h4, body h5, body h6 {
+    color: #C5C5C5; }
+  body .page-header h1 i {
+    color: #D5D5D5; }
+  body .page-header p {
+    color: #D5D5D5; }
+  body .table-of-contents a {
+    color: #D5D5D5; }
+    body .table-of-contents a:hover {
+      color: #E5E5E5; }
+  body .btn-flat {
+    color: #AAA; }
+    body .btn-flat:not(.disabled):hover {
+      color: #AAA; }
+  body .select-wrapper input.select-dropdown:disabled {
+    color: rgba(252, 252, 252, 0.3);
+    border-bottom: 1px solid rgba(252, 252, 252, 0.3); }
+  body .select-wrapper span.caret {
+    color: #FCFCFC; }
+    body .select-wrapper span.caret.disabled {
+      color: rgba(252, 252, 252, 0.26); }
+  body [type="radio"]:disabled + label {
+    color: rgba(252, 252, 252, 0.18); }
+  body [type="radio"]:disabled:not(:checked) + label:before {
+    border-color: rgba(252, 252, 252, 0.06); }
+  body [type="checkbox"]:disabled + label {
+    color: rgba(252, 252, 252, 0.18); }
+  body [type="checkbox"]:checked:disabled + label:before {
+    border-right: 2px solid rgba(252, 252, 252, 0.06);
+    border-bottom: 2px solid rgba(252, 252, 252, 0.06); }
+  body [type="checkbox"]:not(:checked):disabled + label:before {
+    background-color: rgba(252, 252, 252, 0.06); }
+  body input[type=range] {
+    border: 1px solid #AAA; }
+  body p code {
+    color: #737373; }
+  body .crud-app form .helper h5 {
+    color: #FEFEFE; }
+  body .crud-app form .helper p {
+    color: #F3F3F3; }
+  body .pricing-table-app .promo p {
+    color: #F9F9F9; }
+  body .error-wrapper #code {
+    color: #E3E3E3; }
+    body .error-wrapper #code i {
+      color: #E9E9E9; }
+  body .error-wrapper h1, body .error-wrapper h2, body .error-wrapper h3, body .error-wrapper h4, body .error-wrapper h5, body .error-wrapper h6 {
+    color: #D9D9D9; }
+  body .error-wrapper p {
+    color: #FAFAFA; }
+  body .dataTables_filter.input-field input:focus {
+    color: #D5D5D5; }
+  body .pagination li a {
+    color: #EFEFEF; }

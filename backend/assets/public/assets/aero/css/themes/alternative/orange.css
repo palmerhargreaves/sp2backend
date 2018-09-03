@@ -1,0 +1,606 @@
+/*
+ * Materialize colors
+ */
+/*
+ * Util
+ */
+/*
+ * Inputs
+ */
+/*
+ * Inputs with icon prefix
+ */
+/*
+ * Checkboxes
+ */
+/*
+ * Radio
+ */
+/*
+ * Switches
+ */
+/*
+ * Ranges
+ */
+/*
+ * Buttons
+ */
+/*
+ * Dropdowns
+ */
+/*
+ * Collections
+ */
+/*
+ * Badges
+ */
+/*
+ * Pagination
+ */
+/*
+ * Preloader
+ */
+/*
+ * Slider
+ */
+/*
+ * Table of contents (PushPin, ScrollSpy)
+ */
+/*
+ * Tabs
+ */
+/*
+ * Datepicker
+ */
+/*
+ * Fixed action buttons
+ */
+/*
+ * Main color
+ */
+/*
+ * Alternative color
+ */
+/*
+ * Defaults used by main and alternative
+ */
+/*
+	 * Create default elements
+	 */
+/*
+			 * Backgrounds
+			 */
+.alternative.lighten-5 {
+  background-color: #fff3e0; }
+
+.btn.alternative.lighten-5:hover {
+  background-color: #fffdfa; }
+
+.btn.alternative.lighten-5:focus {
+  background-color: #fffbf4; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.lighten-5 {
+  color: #fff3e0; }
+  a.alternative-text.lighten-5:hover {
+    color: #ffe5bc !important; }
+
+.alternative-text.lighten-5 {
+  color: #fff3e0; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.lighten-5 li > a,
+.alternative-dropdown.lighten-5 li > span {
+  color: #fff3e0; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.lighten-4 {
+  background-color: #ffe0b2; }
+
+.btn.alternative.lighten-4:hover {
+  background-color: #ffeacc; }
+
+.btn.alternative.lighten-4:focus {
+  background-color: #ffe8c6; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.lighten-4 {
+  color: #ffe0b2; }
+  a.alternative-text.lighten-4:hover {
+    color: #ffd28e !important; }
+
+.alternative-text.lighten-4 {
+  color: #ffe0b2; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.lighten-4 li > a,
+.alternative-dropdown.lighten-4 li > span {
+  color: #ffe0b2; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.lighten-3 {
+  background-color: #ffcc80; }
+
+.btn.alternative.lighten-3:hover {
+  background-color: #ffd69a; }
+
+.btn.alternative.lighten-3:focus {
+  background-color: #ffd494; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.lighten-3 {
+  color: #ffcc80; }
+  a.alternative-text.lighten-3:hover {
+    color: #ffbe5c !important; }
+
+.alternative-text.lighten-3 {
+  color: #ffcc80; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.lighten-3 li > a,
+.alternative-dropdown.lighten-3 li > span {
+  color: #ffcc80; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.lighten-2 {
+  background-color: #ffb74d; }
+
+.btn.alternative.lighten-2:hover {
+  background-color: #ffc167; }
+
+.btn.alternative.lighten-2:focus {
+  background-color: #ffbf61; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.lighten-2 {
+  color: #ffb74d; }
+  a.alternative-text.lighten-2:hover {
+    color: #ffa929 !important; }
+
+.alternative-text.lighten-2 {
+  color: #ffb74d; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.lighten-2 li > a,
+.alternative-dropdown.lighten-2 li > span {
+  color: #ffb74d; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.lighten-1 {
+  background-color: #ffa726; }
+
+.btn.alternative.lighten-1:hover {
+  background-color: #ffb140; }
+
+.btn.alternative.lighten-1:focus {
+  background-color: #ffaf3a; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.lighten-1 {
+  color: #ffa726; }
+  a.alternative-text.lighten-1:hover {
+    color: #ff9902 !important; }
+
+.alternative-text.lighten-1 {
+  color: #ffa726; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.lighten-1 li > a,
+.alternative-dropdown.lighten-1 li > span {
+  color: #ffa726; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative {
+  background-color: #ff9800; }
+
+.btn.alternative:hover {
+  background-color: #ffa21a; }
+
+.btn.alternative:focus {
+  background-color: #ffa014; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text {
+  color: #ff9800; }
+  a.alternative-text:hover {
+    color: #db8300 !important; }
+
+.alternative-text {
+  color: #ff9800; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown li > a,
+.alternative-dropdown li > span {
+  color: #ff9800; }
+
+/*
+			 * Waves
+			 */
+.waves-effect.waves-alternative .waves-ripple {
+  background-color: rgba(255, 193, 102, 0.6); }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.darken-1 {
+  background-color: #fb8c00; }
+
+.btn.alternative.darken-1:hover {
+  background-color: #ff9816; }
+
+.btn.alternative.darken-1:focus {
+  background-color: #ff9510; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.darken-1 {
+  color: #fb8c00; }
+  a.alternative-text.darken-1:hover {
+    color: #d77800 !important; }
+
+.alternative-text.darken-1 {
+  color: #fb8c00; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.darken-1 li > a,
+.alternative-dropdown.darken-1 li > span {
+  color: #fb8c00; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.darken-2 {
+  background-color: #f57c00; }
+
+.btn.alternative.darken-2:hover {
+  background-color: #ff8910; }
+
+.btn.alternative.darken-2:focus {
+  background-color: #ff860a; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.darken-2 {
+  color: #f57c00; }
+  a.alternative-text.darken-2:hover {
+    color: #d16a00 !important; }
+
+.alternative-text.darken-2 {
+  color: #f57c00; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.darken-2 li > a,
+.alternative-dropdown.darken-2 li > span {
+  color: #f57c00; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.darken-3 {
+  background-color: #ef6c00; }
+
+.btn.alternative.darken-3:hover {
+  background-color: #ff780a; }
+
+.btn.alternative.darken-3:focus {
+  background-color: #ff7604; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.darken-3 {
+  color: #ef6c00; }
+  a.alternative-text.darken-3:hover {
+    color: #cb5c00 !important; }
+
+.alternative-text.darken-3 {
+  color: #ef6c00; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.darken-3 li > a,
+.alternative-dropdown.darken-3 li > span {
+  color: #ef6c00; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.darken-4 {
+  background-color: #e65100; }
+
+.btn.alternative.darken-4:hover {
+  background-color: #ff5a01; }
+
+.btn.alternative.darken-4:focus {
+  background-color: #fa5800; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.darken-4 {
+  color: #e65100; }
+  a.alternative-text.darken-4:hover {
+    color: #c24400 !important; }
+
+.alternative-text.darken-4 {
+  color: #e65100; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.darken-4 li > a,
+.alternative-dropdown.darken-4 li > span {
+  color: #e65100; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.accent-1 {
+  background-color: #ffd180; }
+
+.btn.alternative.accent-1:hover {
+  background-color: #ffda9a; }
+
+.btn.alternative.accent-1:focus {
+  background-color: #ffd894; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.accent-1 {
+  color: #ffd180; }
+  a.alternative-text.accent-1:hover {
+    color: #ffc45c !important; }
+
+.alternative-text.accent-1 {
+  color: #ffd180; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.accent-1 li > a,
+.alternative-dropdown.accent-1 li > span {
+  color: #ffd180; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.accent-2 {
+  background-color: #ffab40; }
+
+.btn.alternative.accent-2:hover {
+  background-color: #ffb65a; }
+
+.btn.alternative.accent-2:focus {
+  background-color: #ffb454; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.accent-2 {
+  color: #ffab40; }
+  a.alternative-text.accent-2:hover {
+    color: #ff9b1c !important; }
+
+.alternative-text.accent-2 {
+  color: #ffab40; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.accent-2 li > a,
+.alternative-dropdown.accent-2 li > span {
+  color: #ffab40; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.accent-3 {
+  background-color: #ff9100; }
+
+.btn.alternative.accent-3:hover {
+  background-color: #ff9c1a; }
+
+.btn.alternative.accent-3:focus {
+  background-color: #ff9a14; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.accent-3 {
+  color: #ff9100; }
+  a.alternative-text.accent-3:hover {
+    color: #db7d00 !important; }
+
+.alternative-text.accent-3 {
+  color: #ff9100; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.accent-3 li > a,
+.alternative-dropdown.accent-3 li > span {
+  color: #ff9100; }
+
+/*
+			 * Backgrounds
+			 */
+.alternative.accent-4 {
+  background-color: #ff6d00; }
+
+.btn.alternative.accent-4:hover {
+  background-color: #ff7c1a; }
+
+.btn.alternative.accent-4:focus {
+  background-color: #ff7914; }
+
+/*
+			 * Texts
+			 */
+a.alternative-text.accent-4 {
+  color: #ff6d00; }
+  a.alternative-text.accent-4:hover {
+    color: #db5e00 !important; }
+
+.alternative-text.accent-4 {
+  color: #ff6d00; }
+
+/*
+			 * Dropdown
+			 */
+.alternative-dropdown.accent-4 li > a,
+.alternative-dropdown.accent-4 li > span {
+  color: #ff6d00; }
+
+/*
+	 * Override Materialize
+	 */
+.btn,
+.btn-large,
+.btn-floating {
+  background-color: #ffa726; }
+  .btn:hover,
+  .btn-large:hover,
+  .btn-floating:hover {
+    background-color: #ffb140; }
+  .btn:focus,
+  .btn-large:focus,
+  .btn-floating:focus {
+    background-color: #ffaf3a; }
+
+.btn:not(.white):not(:disabled),
+.btn-large:not(:white):not(:disabled) {
+  color: #FFF !important; }
+  .btn:not(.white):not(:disabled) i,
+  .btn-large:not(:white):not(:disabled) i {
+    color: #FFF !important; }
+  .btn:not(.white):not(:disabled):hover,
+  .btn-large:not(:white):not(:disabled):hover {
+    color: #FFF !important; }
+    .btn:not(.white):not(:disabled):hover i,
+    .btn-large:not(:white):not(:disabled):hover i {
+      color: #FFF !important; }
+
+.btn.white:not(:disabled),
+.btn-large.white:not(:disabled) {
+  color: #ffa726 !important; }
+  .btn.white:not(:disabled) i,
+  .btn-large.white:not(:disabled) i {
+    color: #ffa726 !important; }
+  .btn.white:not(:disabled):hover,
+  .btn-large.white:not(:disabled):hover {
+    color: #ffa726 !important; }
+    .btn.white:not(:disabled):hover i,
+    .btn-large.white:not(:disabled):hover i {
+      color: #ffa726 !important; }
+
+.dropdown-content li > a,
+.dropdown-content li > span {
+  color: #ff9800; }
+
+span.badge.new {
+  background-color: #ffa726; }
+
+.pagination li.active {
+  background-color: #ffa726; }
+  .pagination li.active a {
+    color: white !important; }
+
+.progress {
+  background-color: #ffebce; }
+  .progress .determinate,
+  .progress .indeterminate {
+    background-color: #ffa726; }
+
+.preloader-wrapper .spinner-layer:not([class*="spinner-blue"]):not([class*="spinner-red"]):not([class*="spinner-yellow"]):not([class*="spinner-green"]) {
+  border-color: #ffa726; }
+
+.tabs .tab a {
+  color: #ffa726; }
+  .tabs .tab a:hover {
+    color: #ffd08c; }
+
+.tabs .tab.disabled a {
+  color: #ffd08c; }
+
+.tabs .indicator {
+  background-color: #ffa726; }
+
+.picker__date-display {
+  background-color: #ffa726; }
+
+.picker__nav--prev:hover,
+.picker__nav--next:hover {
+  background: #fcefdb; }
+
+.picker__weekday-display {
+  background-color: #ff9902; }
+
+.picker__day.picker__day--today {
+  color: #ffa726; }
+
+.picker__day--selected,
+.picker__day--selected:hover,
+.picker--focused .picker__day--selected {
+  background-color: #ffa726; }
+  .picker__day--selected.picker__day--outfocus,
+  .picker__day--selected:hover.picker__day--outfocus,
+  .picker--focused .picker__day--selected.picker__day--outfocus {
+    background-color: #fcefdb; }
+
+.picker__close,
+.picker__today {
+  color: #ffa726; }
+
+button.picker__today:focus,
+button.picker__clear:focus,
+button.picker__close:focus {
+  background-color: #fcefdb; }
+
+/*
+	 * Apps - CRUD
+	 */
+.select2-dropdown .select2-results__option,
+.select2-dropdown .select2-results__option--highlighted[aria-selected] {
+  color: #ff9800 !important; }

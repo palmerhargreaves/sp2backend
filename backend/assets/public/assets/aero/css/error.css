@@ -1,0 +1,114 @@
+/*
+ * Util
+ */
+/*
+ * Inputs
+ */
+/*
+ * Inputs with icon prefix
+ */
+/*
+ * Checkboxes
+ */
+/*
+ * Radio
+ */
+/*
+ * Switches
+ */
+/*
+ * Ranges
+ */
+/*
+ * Buttons
+ */
+/*
+ * Dropdowns
+ */
+/*
+ * Collections
+ */
+/*
+ * Badges
+ */
+/*
+ * Pagination
+ */
+/*
+ * Preloader
+ */
+/*
+ * Slider
+ */
+/*
+ * Table of contents (PushPin, ScrollSpy)
+ */
+/*
+ * Tabs
+ */
+/*
+ * Datepicker
+ */
+/*
+ * Fixed action buttons
+ */
+/*
+ * Main color
+ */
+/*
+ * Alternative color
+ */
+/*
+ * Defaults used by main and alternative
+ */
+/*
+ * Box sizing
+ */
+*, ::after, ::before {
+  -webkit-box-sizing: inherit;
+  box-sizing: inherit; }
+
+/*
+ * Outline
+ */
+* {
+  outline: none !important; }
+
+/*
+ * Buttons
+ */
+button.btn-flat:focus {
+  background-color: inherit !important; }
+
+/*
+ * Images
+ */
+img {
+  max-width: 100%; }
+
+.error-wrapper {
+  position: relative;
+  margin: 10rem auto;
+  text-align: center; }
+  .error-wrapper #code {
+    font-family: Oswald,sans-serif;
+    font-size: 6.5rem;
+    margin-bottom: 5px; }
+  .error-wrapper h1, .error-wrapper h2, .error-wrapper h3, .error-wrapper h4, .error-wrapper h5, .error-wrapper h6 {
+    font-family: Oswald,sans-serif;
+    margin: 0px 0px 50px;
+    text-transform: uppercase; }
+  .error-wrapper h1 {
+    font-size: 2rem; }
+  .error-wrapper h2 {
+    font-size: 1.9rem; }
+  .error-wrapper h3 {
+    font-size: 1.8rem; }
+  .error-wrapper h4 {
+    font-size: 1.7rem; }
+  .error-wrapper h5 {
+    font-size: 1.6rem; }
+  .error-wrapper h6 {
+    font-size: 1.5rem; }
+  .error-wrapper p {
+    font-size: 1.2rem; }

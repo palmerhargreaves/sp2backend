@@ -1,0 +1,23 @@
+.dev-page .dev-page-header .dph-logo
+{
+    float: left;
+    width: 381px;
+    height: 55px;
+    line-height: 55px;
+    background: #364760;
+    text-align: center;
+    position: relative;
+    /* margin-right: 55px; */
+    margin-left: -81px;
+}
+
+.dev-page .dev-page-header .dph-logo a:nth-child(1) {
+    width: 100%;
+    display: block;
+    height: 55px;
+    background: url(../img/logo.png) top center no-repeat transparent;
+    text-indent: -99999px;
+    overflow: hidden;
+    background-size: contain;
+    filter: invert(100%);
+}
