@@ -65,7 +65,7 @@ class PageController extends Controller
      * @return array|null|\yii\db\ActiveRecord|\yii\web\Response
      */
     protected function getActivity() {
-        $activity_id = Yii::$app->request->get('id') ?  Yii::$app->request->get('id') :Yii::$app->request->post('id');
+        $activity_id = Yii::$app->request->get('id') ?  Yii::$app->request->get('id') : Yii::$app->request->post('id');
         $activity = Activity::find()->where(['id' => $activity_id])->one();
 
         if (!$activity) {

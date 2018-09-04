@@ -218,6 +218,7 @@ use yii\widgets\Pjax;
                                     'attribute' => Yii::t('app', 'Действия'),
                                     'value' => function ($model) {
                                         return '
+                                            <a href="#modal-dialog" data-url="'.Url::to(['/activity/show-statistic-config', 'id' => $model->id]).'" class="modal-trigger js-show-statistic-config btn-floating waves-effect waves-light green tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация параметров статистики') . '"><i class="mdi-action-assessment"></i></a>
                                             <a href="#!" data-url="'.Url::to(['/activity/show-config-options', 'id' => $model->id]).'" class="js-show-config btn-floating waves-effect waves-light grey tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация') . '"><i class="mdi-action-settings"></i></a>
                                             <a href="' . Url::to(['/activity/info', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light blue tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Редактировать') . '"><i class="mdi-editor-mode-edit"></i></a>
                                             <a href="' . Url::to(['/activity/delete', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light red tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Удалить') . '"><i class="mdi-content-clear"></i></a>';
@@ -252,9 +253,38 @@ use yii\widgets\Pjax;
 
         </div>
     </div>
+
+    <div id="modal-config-agreement-by-user" class="modal">
+        <div class="model-email-content" style="padding-top: 0px;">
+
+        </div>
+    </div>
+
+    <div id="modal-dialog" class="modal modal-window bottom-sheet" style="min-height: 80%; max-height: 99%;">
+        <div class="modal-content modal-config-statistic-content">
+
+        </div>
+    </div>
 </div>
 
 <?php $this->registerJs('
+    window.activity_statistic = new ActivityStatistic({
+        
+    }).start();
+    
+    $(document).on("click", ".modal-trigger", function(event) {
+        var element = $(event.currentTarget);
+
+        $.post(element.data("url"), {}, function(result) {
+            $(".modal-config-statistic-content").html(result);
+            
+            $(\'select\').material_select();
+            $(\'.tooltipped\').tooltip({
+                delay: 50
+            });
+        });
+    });
+    
     $(".activity-active").each(function(index, item) {
         $(item).sparkline($(item).data("items").split(":"), {
             type: \'bar\',
@@ -376,7 +406,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal", function(event) {
+    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal, .js-show-agreement-by-user-config-modal", function(event) {
         var element = $(event.currentTarget);
         
         $.post(getElementData(element, "url"), {
@@ -408,7 +438,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("change", ".js-pre-check-user-item, .js-special-agreement-user-item", function(event) {
+    $(document).on("change", ".js-pre-check-user-item, .js-special-agreement-user-item, .js-agreement-by-user-item", function(event) {
         var element = $(event.currentTarget);
         
         $.post(element.closest("table").data("url"), {
@@ -419,7 +449,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("click", "#activity-special-agreement", function(event) {
+    $(document).on("click", "#activity-special-agreement, #activity-agreement-by-user", function(event) {
         var element = $(event.currentTarget);
         
         $.post(element.data("url"), {

@@ -2,6 +2,7 @@
 
 namespace common\models\activity;
 
+use common\models\activity\sections\ActivitySectionInterface;
 use Yii;
 
 /**
@@ -13,8 +14,12 @@ use Yii;
  * @property integer $status
  * @property integer $activity_id
  */
-class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord
+class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements ActivitySectionInterface
 {
+    protected $_template = '';
+
+    protected $_block_template = '';
+
     /**
      * @inheritdoc
      */
@@ -30,8 +35,9 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord
     {
         return [
             [['header', 'parent_id', 'activity_id'], 'required'],
-            [['parent_id', 'status', 'activity_id', 'position'], 'integer'],
+            [['parent_id', 'status', 'activity_id', 'position', 'section_template_id'], 'integer'],
             [['header'], 'string', 'max' => 255],
+            [['description'], 'string'],
         ];
     }
 
@@ -43,6 +49,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord
         return [
             'id' => 'ID',
             'header' => 'Header',
+            'description' => 'Description',
             'parent_id' => 'Parent ID',
             'status' => 'Status',
             'activity_id' => 'ActivityController ID',
@@ -65,5 +72,43 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord
         }
 
         return [ $position > 1 ? true : false ];
+    }
+
+    /**
+     * Render field list of section
+     * @param $view
+     * @return mixed
+     */
+    public function render($view)
+    {
+        $html = $view->renderPartial('partials/blocks/_settings', [ 'section' => $this ]);
+        $html .= $view->renderPartial($this->_block_template, [ 'section' => $this ]);
+
+        return $html;
+    }
+
+    /**
+     * Получить данные по блоку
+     * @param $activity
+     * @param $section_template_id
+     * @return mixed
+     */
+    public function getSection($activity, $section_template_id) {
+        return self::find()->where(['activity_id' => $activity->id, 'section_template_id' => $section_template_id])->one();
+    }
+
+    /**
+     * Отключаем секцию
+     * @return bool
+     */
+    public static function disableSection() {
+        $section = self::findOne(['id' => Yii::$app->request->post('section_id')]);
+
+        if ($section) {
+            $section->status = 0;
+            return $section->save(false);
+        }
+
+        return false;
     }
 }
