@@ -67,7 +67,12 @@ class AppAsset extends AssetBundle
         "assets/materialize/js/plugins/floatThead/jquery.floatThead.min.js",
         "assets/materialize/js/plugins/floatThead/jquery.floatThead-slim.min.js",
 
+        "assets/materialize/js/plugins/jquery-validation/jquery.validate.min.js",
+        "assets/materialize/js/plugins/jquery-validation/additional-methods.min.js",
+
         "assets/js/app/activity/statistic/activity_statistic.js",
+        "assets/js/app/activity/statistic/targets.js",
+
     ];
 
     public $depends = [

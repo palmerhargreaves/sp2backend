@@ -19,6 +19,10 @@ use Yii;
  * @property string $description
  * @property integer $position
  * @property integer $required
+ * @property array $calcFieldsIds
+ * @property mixed $calcFields
+ * @property mixed $calcType
+ * @property string $calcFieldsList
  * @property integer $step_id
  */
 class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
@@ -45,8 +49,8 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     {
         return [
             [ [ 'header', 'activity_id' ], 'required' ],
-            [ [ 'value_type' ], 'string' ],
-            [ [ 'activity_id', 'parent_id', 'status', 'position', 'required', 'step_id' ], 'integer' ],
+            [ [ 'value_type', 'def_value', 'dealers_group' ], 'string' ],
+            [ [ 'activity_id', 'parent_id', 'status', 'position', 'required', 'step_id', 'editable' ], 'integer' ],
             [ [ 'header', 'description' ], 'string', 'max' => 255 ],
         ];
     }
@@ -66,6 +70,9 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             'description' => 'Описание',
             'position' => 'Position',
             'required' => 'Обязательное',
+            'def_value' => 'Значение по умолчанию',
+            'editable' => 'Редактируемое поле',
+            'dealers_group' => 'Группа дилеров'
         ];
     }
 

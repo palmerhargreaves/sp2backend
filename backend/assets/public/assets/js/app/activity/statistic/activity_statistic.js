@@ -1,6 +1,8 @@
 ActivityStatistic = function(config) {
 
     $.extend(this, config);
+
+    this.targets = null;
 }
 
 ActivityStatistic.prototype = {
@@ -13,6 +15,17 @@ ActivityStatistic.prototype = {
         $(document).on('click', '.js-activate-activity-static-block', $.proxy(this.onActivateActivityStatisticBlock, this));
 
         $(document).on('click', '.js-load-block-settings-and-fields', $.proxy(this.onLoadBlockData, this));
+
+        this.targets = new ActivityBlockTargets({
+
+        }).start();
+    },
+
+    initElements: function() {
+        $('select').material_select();
+        $('.tooltipped').tooltip({
+            delay: 50
+        });
     },
 
     onLoadBlockData: function(event) {
@@ -33,11 +46,7 @@ ActivityStatistic.prototype = {
         if (result.success) {
             this.getContentContainer().html(result.html);
 
-            $("body, html").animate({
-                    scrollTop: "10px"
-                },
-                {duration: 500});
-
+            this.initElements();
         } else {
             Materialize.toast("Ошибка загрузки данных.", 2500)
         }
@@ -46,7 +55,6 @@ ActivityStatistic.prototype = {
     onDisableActivityStatisticBlock: function(event) {
         var element = $(event.currentTarget);
 
-        console.log(element);
         if (confirm('Отключить блок ?')) {
             showLoader();
             $.post(element.data('url'), {
@@ -97,6 +105,8 @@ ActivityStatistic.prototype = {
 
             this.getContentContainer().html(result.html);
             $('.block-row-item-' + result.section_template_id).html(result.block_html);
+
+            this.initElements();
 
             Materialize.toast("Блок успешно активирован.", 2500);
         } else {

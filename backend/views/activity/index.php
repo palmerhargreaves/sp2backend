@@ -277,11 +277,6 @@ use yii\widgets\Pjax;
 
         $.post(element.data("url"), {}, function(result) {
             $(".modal-config-statistic-content").html(result);
-            
-            $(\'select\').material_select();
-            $(\'.tooltipped\').tooltip({
-                delay: 50
-            });
         });
     });
     

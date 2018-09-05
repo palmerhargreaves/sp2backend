@@ -23,6 +23,7 @@ use common\models\activity\utils\ActivitiesStatistics;
 use common\models\logs\Log;
 use richardfan\sortable\SortableAction;
 use Yii;
+use yii\bootstrap\ActiveForm;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
@@ -68,7 +69,9 @@ class ActivityController extends PageController
                             'show-statistic-config',
                             'activity-statistic-disable-block',
                             'activity-statistic-activate-block',
-                            'load-block-data'
+                            'load-block-data',
+                            'add-block-field',
+                            'validate-block-data'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -364,5 +367,23 @@ class ActivityController extends PageController
         }
 
         return [ 'success' => false ];
+    }
+
+    public function actionAddBlockField() {
+
+    }
+
+    public function actionValidateBlockData() {
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+
+        if (Yii::$app->request->isPost) {
+            $model = $section->getModel();
+
+            if ($model->load(Yii::$app->request->post())) {
+                return ActiveForm::validate($model);
+            }
+        }
+
+        return false;
     }
 }

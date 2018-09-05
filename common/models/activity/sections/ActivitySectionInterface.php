@@ -25,4 +25,9 @@ interface ActivitySectionInterface {
      * @return mixed
      */
     public function render($view);
+
+    /**
+     * @return mixed
+     */
+    public function getModel();
 }

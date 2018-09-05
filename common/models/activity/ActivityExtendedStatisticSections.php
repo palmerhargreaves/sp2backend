@@ -82,7 +82,6 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
     public function render($view)
     {
         $html = $view->renderPartial('partials/blocks/_settings', [ 'section' => $this ]);
-        $html .= $view->renderPartial($this->_block_template, [ 'section' => $this ]);
 
         return $html;
     }
@@ -110,5 +109,13 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
         }
 
         return false;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getModel()
+    {
+        // TODO: Implement getModel() method.
     }
 }
