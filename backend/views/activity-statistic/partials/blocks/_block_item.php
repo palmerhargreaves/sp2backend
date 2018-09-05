@@ -19,7 +19,7 @@ use yii\helpers\Url;
                 <?php if ($section_template['section'] && $section_template['section']->status): ?>
                     <i class="js-load-block-settings-and-fields mdi-action-settings tooltipped right " <?php if ($section_template['section'] && $section_template['section']->status): ?>
                         data-position="top" data-delay="50" data-tooltip='Параметры'
-                        data-url="<?php echo Url::to(['activity/load-block-data']); ?>"
+                        data-url="<?php echo Url::to(['activity-statistic/load-block-data']); ?>"
                         data-section-id="<?php echo $section_template['section']->id; ?>" style="cursor: pointer;" <?php endif; ?> >
 
                     </i>
@@ -29,7 +29,7 @@ use yii\helpers\Url;
         </div>
         <div class="card-action">
             <?php if ($section_template['section'] && $section_template['section']->status): ?>
-                <a href="#" data-url="<?php echo Url::to(['activity/activity-statistic-disable-block']); ?>"
+                <a href="#" data-url="<?php echo Url::to(['activity-statistic/activity-statistic-disable-block']); ?>"
                    style="display: <?php echo $section_template['section'] && $section_template['section']->status ? "block" : "none"; ?>"
                    data-section-template-id="<?php echo $section_template['section_template']->id; ?>"
                    data-activity-id="<?php echo $section_template['activity']->id; ?>"
@@ -39,7 +39,7 @@ use yii\helpers\Url;
                 </a>
             <?php endif; ?>
 
-            <a href="#" data-url="<?php echo Url::to(['activity/activity-statistic-activate-block']); ?>"
+            <a href="#" data-url="<?php echo Url::to(['activity-statistic/activity-statistic-activate-block']); ?>"
                style="display: <?php echo !($section_template['section'] && $section_template['section']->status) ? "block" : "none"; ?>"
                data-activity-id="<?php echo $section_template['activity']->id; ?>"
                data-section-template-id="<?php echo $section_template['section_template']->id; ?>"

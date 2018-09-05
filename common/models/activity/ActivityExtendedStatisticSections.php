@@ -3,6 +3,7 @@
 namespace common\models\activity;
 
 use common\models\activity\sections\ActivitySectionInterface;
+use common\models\activity\statistic\ActivitySettingsBlock;
 use Yii;
 
 /**
@@ -49,7 +50,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
         return [
             'id' => 'ID',
             'header' => 'Header',
-            'description' => 'Description',
+            'description' => 'Описание',
             'parent_id' => 'Parent ID',
             'status' => 'Status',
             'activity_id' => 'ActivityController ID',
@@ -81,7 +82,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
      */
     public function render($view)
     {
-        $html = $view->renderPartial('partials/blocks/_settings', [ 'section' => $this ]);
+        $html = $view->renderAjax('partials/blocks/_settings', [ 'section' => $this, 'model' => new ActivitySettingsBlock() ]);
 
         return $html;
     }

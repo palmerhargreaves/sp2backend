@@ -71,7 +71,7 @@ class AppAsset extends AssetBundle
         "assets/materialize/js/plugins/jquery-validation/additional-methods.min.js",
 
         "assets/js/app/activity/statistic/activity_statistic.js",
-        "assets/js/app/activity/statistic/targets.js",
+        "assets/js/app/activity/statistic/form.js",
 
     ];
 

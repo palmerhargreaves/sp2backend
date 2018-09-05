@@ -16,9 +16,8 @@ ActivityStatistic.prototype = {
 
         $(document).on('click', '.js-load-block-settings-and-fields', $.proxy(this.onLoadBlockData, this));
 
-        this.targets = new ActivityBlockTargets({
-
-        }).start();
+        new ActivityBlockForm({ form: '#form-block-settings' }).start();
+        new ActivityBlockForm({ form: '#form-new-field-add' }).start();
     },
 
     initElements: function() {

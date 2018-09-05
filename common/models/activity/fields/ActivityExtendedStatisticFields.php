@@ -89,6 +89,18 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     }
 
     /**
+     * Получить список дилерских групп
+     * @return array
+     */
+    public static function getDealersGroups ()
+    {
+        return [
+            'pkw' => Yii::t('app', 'PKW'),
+            'all' => Yii::t('app', 'Для всех дилеров'),
+        ];
+    }
+
+    /**
      * @param $symbol
      * @return mixed
      */

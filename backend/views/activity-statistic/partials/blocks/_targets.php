@@ -11,7 +11,7 @@ use yii\helpers\Url;
 ?>
 
 <div class="card-panel">
-    <h4 class="header2">Поля блока</h4>
+    <h4 class="header2"></h4>
     <div class="row">
         <?php $form = ActiveForm::begin([ 'id' => 'form-new-field-add',
             'enableAjaxValidation' => false,
@@ -32,10 +32,11 @@ use yii\helpers\Url;
 
             <div class="row">
                 <div class="input-field col s6">
-                    <select id="target_dealers_group">
+                    <select name="dealers_group">
                         <option value="" disabled selected>Выберите группу дилеров</option>
-                        <option value="all">PKW</option>
-                        <option value="pkw">Для всех дилеров</option>
+                        <?php foreach (\common\models\activity\fields\ActivityExtendedStatisticFields::getDealersGroups() as $group_key => $dealer_group): ?>
+                            <option value="<?php echo $group_key; ?>"><?php echo $dealer_group; ?></option>
+                        <?php endforeach; ?>
                     </select>
                 </div>
             </div>
