@@ -12,6 +12,7 @@ use common\models\activity\ActivityAgreementByUser;
 use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
 
+use common\models\activity\fields\ActivityExtendedStatisticFields;
 use common\models\activity\statistic\ActivitySettingsBlock;
 use Yii;
 use yii\bootstrap\ActiveForm;
@@ -41,7 +42,8 @@ class ActivityStatisticController extends PageController
                             'activity-statistic-activate-block',
                             'load-block-data',
                             'add-block-field',
-                            'edit-settings'
+                            'edit-settings',
+                            'delete-block-field'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -101,7 +103,7 @@ class ActivityStatisticController extends PageController
     }
 
     /**
-     * Зашружаем данные по блоку
+     * Загружаем данные по блоку
      */
     public function actionLoadBlockData ()
     {
@@ -109,32 +111,33 @@ class ActivityStatisticController extends PageController
 
         $section = ActivityExtendedStatisticSectionsTemplates::getSection();
         if ($section) {
-            return [ 'success' => true, 'html' => $section->render($this) ];
+            return [ 'success' => true, 'html' => $section->render($this), 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ];
         }
 
         return [ 'success' => false ];
     }
 
+    /**
+     * Добавляем к блоку поля
+     * @return array
+     */
     public function actionAddBlockField ()
     {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-    }
-
-    public function actionValidateBlockData ()
-    {
         $section = ActivityExtendedStatisticSectionsTemplates::getSection();
-
-        if (Yii::$app->request->isPost) {
-            $model = $section->getModel();
-
-            if ($model->load(Yii::$app->request->post())) {
-                return ActiveForm::validate($model);
-            }
+        if ($section && Yii::$app->request->isPost) {
+            return $section->addBlockField($this);
         }
 
-        return false;
+        return [ 'success' => false ];
     }
 
+    /**
+     * Редактирование параметров блока
+     * @param $id
+     * @return array
+     */
     public function actionEditSettings ( $id )
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
@@ -146,5 +149,23 @@ class ActivityStatisticController extends PageController
         }
 
         return [ 'success' => false ];
+    }
+
+    /**
+     * Удаление поля
+     */
+    public function actionDeleteBlockField() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $field = ActivityExtendedStatisticFields::find()->where(['id' => \Yii::$app->request->get('id')])->one();
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+
+        if ($field && $section) {
+            ActivityExtendedStatisticFields::deleteAll(['id' => $field->id]);
+
+            return [ 'success' => true, 'message' => 'Поле успешно удалено.', 'html' => $section->render($this), 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ];
+        }
+
+        return [ 'success' => false, 'message' => 'Ошибка удаления поля.' ];
     }
 }

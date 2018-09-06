@@ -11,12 +11,12 @@ use yii\helpers\Url;
 ?>
 
 <div class="card-panel">
-    <h4 class="header2"></h4>
+    <h4 class="header2">Добавление нового поля</h4>
     <div class="row">
         <?php $form = ActiveForm::begin([ 'id' => 'form-new-field-add',
             'enableAjaxValidation' => false,
             'enableClientValidation' => true,
-            'action' => Url::to(['activity/add-block-field']),
+            'action' => Url::to(['activity-statistic/add-block-field']),
             'fieldConfig' => [
             'template' => '{input}{error}'
         ], 'options' => [ 'class' => 'col s12', ] ]); ?>
@@ -26,18 +26,18 @@ use yii\helpers\Url;
                 </div>
 
                 <div class="input-field col s6">
-                    <?php echo $form->field($model, 'def_value')->textInput([ 'class' => '', 'placeholder' => 'Значение', 'disabled' => false ]); ?>
+                    <?php echo $form->field($model, 'def_value')->textInput([ 'class' => '', 'type' => 'number', 'placeholder' => 'Значение', 'disabled' => false ]); ?>
                 </div>
             </div>
 
             <div class="row">
                 <div class="input-field col s6">
-                    <select name="dealers_group">
-                        <option value="" disabled selected>Выберите группу дилеров</option>
+                    <select name="ActivityTargetBlock[dealers_group]" class="block-selectbox">
                         <?php foreach (\common\models\activity\fields\ActivityExtendedStatisticFields::getDealersGroups() as $group_key => $dealer_group): ?>
                             <option value="<?php echo $group_key; ?>"><?php echo $dealer_group; ?></option>
                         <?php endforeach; ?>
                     </select>
+                    <p class="help-block help-block-error"></p>
                 </div>
             </div>
 
@@ -51,9 +51,10 @@ use yii\helpers\Url;
                 </div>
             </div>
 
-            <input type="hidden" name="id" value="<?php echo $section->activity_id; ?>" />
+            <input type="hidden" name="activity_id" value="<?php echo $section->activity_id; ?>" />
             <input type="hidden" name="section_id" value="<?php echo $section->id; ?>" />
             <input type="hidden" name="section_template_id" value="<?php echo $section->section_template_id; ?>" />
+
         <?php $form->end(); ?>
     </div>
 </div>

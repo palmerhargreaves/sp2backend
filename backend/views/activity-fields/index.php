@@ -302,7 +302,7 @@ use yii\helpers\Url;
                 <div class="row">
                     <div class="input-field col s12">
                         <?php echo $form->field($model, 'parent_id')
-                            ->dropDownList(\yii\helpers\ArrayHelper::map(\common\models\activity\fields\ActivityExtendedStatisticSections::find()->where([ 'activity_id' => $activity->id ])->orderBy([ 'id' => SORT_DESC ])->all(), 'id', 'header')); ?>
+                            ->dropDownList(\yii\helpers\ArrayHelper::map(\common\models\activity\ActivityExtendedStatisticSections::find()->where([ 'activity_id' => $activity->id ])->orderBy([ 'id' => SORT_DESC ])->all(), 'id', 'header')); ?>
                     </div>
                 </div>
 

@@ -26,6 +26,12 @@ interface ActivitySectionInterface {
      */
     public function render($view);
 
+    /** Render fields
+     * @param $view
+     * @return mixed
+     */
+    public function renderFields($view);
+
     /**
      * @return mixed
      */

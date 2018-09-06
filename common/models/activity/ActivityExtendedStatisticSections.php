@@ -2,6 +2,7 @@
 
 namespace common\models\activity;
 
+use common\models\activity\fields\ActivityExtendedStatisticFields;
 use common\models\activity\sections\ActivitySectionInterface;
 use common\models\activity\statistic\ActivitySettingsBlock;
 use Yii;
@@ -87,6 +88,10 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
         return $html;
     }
 
+    public function renderFields($view) {
+        // TODO: Implement getModel() method.
+    }
+
     /**
      * Получить данные по блоку
      * @param $activity
@@ -118,5 +123,17 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
     public function getModel()
     {
         // TODO: Implement getModel() method.
+    }
+
+    public function addBlockField($view) {
+        // TODO: Implement getModel() method.
+    }
+
+    /**
+     * Получить список полей привязанных к блоку
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getFieldsList() {
+        return ActivityExtendedStatisticFields::find()->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])->orderBy(['position' => SORT_ASC])->all();
     }
 }

@@ -32,6 +32,10 @@ ActivityBlockForm.prototype = {
             data: form.serialize(),
             success: function (response) {
                 Materialize.toast(response.message, 2500)
+
+                if (response.html_container != undefined) {
+                    $(response.html_container).html(response.html);
+                }
             },
             error: function(response) {
                 Materialize.toast("Ошибка сохранения данных.", 2500)

@@ -23,7 +23,7 @@ $colors = ["blue", "green", "red", "orange", "yellow"];
         <?php endforeach; ?>
     </div>
 
-    <div id="container-activity-statistic-data" class="col s12 m8 l9">
+    <div id="container-activity-statistic-data" class="col s12 m8 l9"></div>
 
-    </div>
+    <div id="container-activity-statistic-fields-list" class="col s12 m8 l9"></div>
 </div>
