@@ -36,4 +36,11 @@ interface ActivitySectionInterface {
      * @return mixed
      */
     public function getModel();
+
+    /**
+     * Add new field
+     * @param $view
+     * @return mixed
+     */
+    public function addBlockField($view);
 }

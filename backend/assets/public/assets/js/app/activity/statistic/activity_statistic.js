@@ -30,8 +30,6 @@ ActivityStatistic.prototype = {
         $('.tooltipped').tooltip({
             delay: 50
         });
-
-        $('#container-activity-statistic-fields-list').html('');
     },
 
     onLoadBlockData: function(event) {
@@ -52,7 +50,6 @@ ActivityStatistic.prototype = {
         if (result.success) {
             this.getContentContainer().html(result.html);
 
-            this.initElements();
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
             }
@@ -76,6 +73,7 @@ ActivityStatistic.prototype = {
                 });
             });
 
+            this.initElements();
             //table.addClass("has-sort");
         } else {
             Materialize.toast("Ошибка загрузки данных.", 2500)
@@ -147,6 +145,8 @@ ActivityStatistic.prototype = {
     },
 
     getContentContainer: function () {
+        $('#container-activity-statistic-fields-list').html('');
+
         return $('#container-activity-statistic-data');
     },
 

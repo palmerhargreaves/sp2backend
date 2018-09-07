@@ -22,6 +22,8 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
 
     protected $_block_template = '';
 
+    protected $_fields_container = '#container-activity-statistic-fields-list';
+
     /**
      * @inheritdoc
      */

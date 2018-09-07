@@ -16,7 +16,7 @@ use common\models\activity\fields\blocks\ActivityTargetBlock;
  */
 
 class ActivitySectionTargets extends ActivityExtendedStatisticSections {
-    protected $_block_template = 'partials/blocks/_targets';
+    protected $_block_template = 'partials/blocks/targets/_targets';
 
     public function beforeSave($insert)
     {
@@ -70,8 +70,8 @@ class ActivitySectionTargets extends ActivityExtendedStatisticSections {
 
     public function renderFields($view) {
         return [
-            'html_container' => '#container-activity-statistic-fields-list',
-            'html' => $view->renderAjax('partials/blocks/_targets_fields_list', [ 'fields' => $this->getFieldsList(), 'section' => $this ])
+            'html_container' => $this->_fields_container,
+            'html' => $view->renderAjax('partials/blocks/targets/_targets_fields_list', [ 'fields' => $this->getFieldsList(), 'section' => $this ])
         ];
     }
 }
