@@ -3,6 +3,8 @@
 namespace common\models\activity\fields;
 
 use common\models\activity\ActivityExtendedStatisticFieldsData;
+use common\models\activity\ActivityExtendedStatisticSections;
+use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
 use common\models\activity\fields\traits\ActivityFieldCalcFieldsTrait;
 use common\models\activity\fields\traits\ActivityFieldsTrait;
 use Yii;
@@ -225,6 +227,37 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
         }
 
         return [ 'success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.') ];
+    }
+
+    /**
+     * @param $postData
+     * @return array
+     */
+    public static function addNewFormula ( $postData )
+    {
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+        if (!$section) {
+            return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при добавлении формулы.') ];
+        }
+
+        $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
+
+        $new_calc_field->section_id = $section->id;
+        $new_calc_field->calc_type = $postData[ 'calc_type' ];
+        $new_calc_field->activity_id = $section->activity_id;
+
+        if ($postData[ 'calc_type' ] != 'multiple') {
+            $new_calc_field->parent_field = $postData[ "data" ][0][ 'id' ];
+            $new_calc_field->calc_field = $postData[ "data" ][1][ 'id' ];
+        } else {
+            $new_calc_field->parent_field = $postData[ "data" ][0][ 'id' ];
+        }
+
+        if (!$new_calc_field->save(false)) {
+            return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при добавлении формулы.') ];
+        }
+
+        return [ 'success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.'), 'section' => $section ];
     }
 
     public static function makeSortFields ()

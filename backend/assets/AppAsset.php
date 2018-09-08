@@ -70,6 +70,9 @@ class AppAsset extends AssetBundle
         "assets/materialize/js/plugins/jquery-validation/jquery.validate.min.js",
         "assets/materialize/js/plugins/jquery-validation/additional-methods.min.js",
 
+        "assets/js/app/app.js",
+
+        "assets/js/app/activity/statistic/base_form.js",
         "assets/js/app/activity/statistic/activity_statistic.js",
         "assets/js/app/activity/statistic/form.js",
 

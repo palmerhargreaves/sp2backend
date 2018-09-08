@@ -13,6 +13,7 @@ use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
 
 use common\models\activity\fields\ActivityExtendedStatisticFields;
+use common\models\activity\fields\ActivityExtendedStatisticFieldsCalculated;
 use common\models\activity\statistic\ActivitySettingsBlock;
 use Yii;
 use yii\bootstrap\ActiveForm;
@@ -43,7 +44,10 @@ class ActivityStatisticController extends PageController
                             'load-block-data',
                             'add-block-field',
                             'edit-settings',
-                            'delete-block-field'
+                            'delete-block-field',
+                            'add-new-formula',
+                            'save-field-data',
+                            'delete-formula-field'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -167,5 +171,47 @@ class ActivityStatisticController extends PageController
         }
 
         return [ 'success' => false, 'message' => 'Ошибка удаления поля.' ];
+    }
+
+    public function actionAddNewFormula() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $result = ActivityExtendedStatisticFields::addNewFormula(Yii::$app->request->post());
+        if ($result['success']) {
+            $section = $result['section'];
+
+            return array_merge($result, ['html_fields' => $section->renderFields($this), 'section_id' => $section->id]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Сохранить парметры поля
+     */
+    public function actionSaveFieldData() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+
+        return array_merge(ActivityExtendedStatisticFields::saveData(\Yii::$app->request->post()), ['html_fields' => $section->renderFields($this), 'section_id' => $section->id ]);
+    }
+
+    /**
+     * Удаление формулы
+     */
+    public function actionDeleteFormulaField() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $field = ActivityExtendedStatisticFieldsCalculated::find()->where(['id' => \Yii::$app->request->get('id')])->one();
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+
+        if ($field && $section) {
+            ActivityExtendedStatisticFieldsCalculated::deleteAll(['id' => $field->id]);
+
+            return [ 'success' => true, 'message' => 'Формула успешно удалена.', 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ];
+        }
+
+        return [ 'success' => false, 'message' => 'Ошибка удаления формулы.' ];
     }
 }

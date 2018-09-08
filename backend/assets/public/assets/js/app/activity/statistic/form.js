@@ -3,11 +3,12 @@
  */
 ActivityBlockForm = function(config) {
     this.form = '';
+    this.custom_fn = null;
 
     $.extend(this, config);
 }
 
-ActivityBlockForm.prototype = {
+extend(ActivityBlockForm, BaseForm, {
     start: function() {
         this.initEvents();
 
@@ -16,10 +17,14 @@ ActivityBlockForm.prototype = {
 
     initEvents: function() {
         $(document).on('beforeSubmit', this.form, $.proxy(this.onBeforeSubmit, this));
+
+        if (this.custom_fn != null) {
+            this.custom_fn();
+        }
     },
 
     onBeforeSubmit: function (event) {
-        var form = $(event.currentTarget);
+        var form = $(event.currentTarget), self = this;
 
         if (form.find('.has-error').length) {
             return false;
@@ -35,6 +40,8 @@ ActivityBlockForm.prototype = {
 
                 if (response.html_container != undefined) {
                     $(response.html_container).html(response.html);
+
+                    self.initElements(response);
                 }
             },
             error: function(response) {
@@ -44,4 +51,5 @@ ActivityBlockForm.prototype = {
 
         return false;
     }
-}
+});
+

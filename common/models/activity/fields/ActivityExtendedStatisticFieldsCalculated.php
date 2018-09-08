@@ -11,6 +11,8 @@ use Yii;
  * @property integer $parent_field
  * @property integer $calc_field
  * @property string $calc_type
+ * @property string $calcFieldName
+ * @property mixed $calcFieldsNames
  * @property integer $activity_id
  */
 class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
@@ -30,7 +32,7 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
     {
         return [
             [['parent_field', 'calc_field', 'calc_type', 'activity_id'], 'required'],
-            [['parent_field', 'calc_field', 'activity_id'], 'integer'],
+            [['parent_field', 'calc_field', 'activity_id', 'section_id'], 'integer'],
             [['calc_type'], 'string'],
         ];
     }
@@ -49,6 +51,26 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
         ];
     }
 
+    /**
+     * @param $calc_type
+     * @return string
+     */
+    public static function getCalcTypeName($calc_type) {
+        $calc_types = [
+            'plus' => '+',
+            'minus' => '-',
+            'divide' => '/',
+            'multiple' => '*',
+            'percent' => '%'
+        ];
+
+        if (array_key_exists($calc_type, $calc_types)) {
+            return $calc_types[$calc_type];
+        }
+
+        return '';
+    }
+
     public function getCalcFieldName() {
         $field = ActivityExtendedStatisticFields::find()->where(['id' => $this->calc_field])->one();
         if ($field) {
@@ -56,5 +78,21 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
         }
 
         return '';
+    }
+
+    public function getCalcFieldsNames() {
+        $fields_names = [];
+
+        $parent_field = ActivityExtendedStatisticFields::find()->where(['id' => $this->parent_field])->one();
+        if ($parent_field) {
+            $fields_names[] = $parent_field->header;
+        }
+
+        $calc_field = ActivityExtendedStatisticFields::find()->where(['id' => $this->calc_field])->one();
+        if ($calc_field) {
+            $fields_names[] = $calc_field->header;
+        }
+
+        return $this->calc_type != 'multiple' ? implode('&nbsp;<span class="task-cat teal" style="margin-left: 0px;">'.self::getCalcTypeName($this->calc_type).'</span>&nbsp;', $fields_names) : implode('', $fields_names);
     }
 }

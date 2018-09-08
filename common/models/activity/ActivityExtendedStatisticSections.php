@@ -3,6 +3,7 @@
 namespace common\models\activity;
 
 use common\models\activity\fields\ActivityExtendedStatisticFields;
+use common\models\activity\fields\ActivityExtendedStatisticFieldsCalculated;
 use common\models\activity\sections\ActivitySectionInterface;
 use common\models\activity\statistic\ActivitySettingsBlock;
 use Yii;
@@ -137,5 +138,13 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
      */
     public function getFieldsList() {
         return ActivityExtendedStatisticFields::find()->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])->orderBy(['position' => SORT_ASC])->all();
+    }
+
+    /**
+     * Получить список доступных формул для раздела
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public function getFormulasList() {
+        return ActivityExtendedStatisticFieldsCalculated::find()->where(['section_id' => $this->id, 'activity_id' => $this->activity_id])->orderBy(['position' => SORT_ASC])->all();
     }
 }

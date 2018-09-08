@@ -4,12 +4,15 @@ namespace common\models\activity\sections;
 
 use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\fields\blocks\ActivityClientsBlock;
+use common\models\activity\fields\blocks\ActivityClientsFormulaBlock;
 
 /**
  * Created by PhpStorm.
  * User: kostet
  * Date: 03.09.2018
  * Time: 11:48
+ *
+ * @property mixed $model
  */
 
 class ActivitySectionClients extends ActivityExtendedStatisticSections {
@@ -30,6 +33,13 @@ class ActivitySectionClients extends ActivityExtendedStatisticSections {
         return new ActivityClientsBlock();
     }
 
+    /**
+     * @return ActivityClientsFormulaBlock
+     */
+    private function getFormulaModel() {
+        return new ActivityClientsFormulaBlock();
+    }
+
     public function render($view)
     {
         $html = parent::render($view);
@@ -41,7 +51,12 @@ class ActivitySectionClients extends ActivityExtendedStatisticSections {
     public function renderFields($view) {
         return [
             'html_container' => $this->_fields_container,
-            'html' => $view->renderAjax('partials/blocks/clients/_clients_fields_list', [ 'fields' => $this->getFieldsList(), 'section' => $this ])
+            'html' => $view->renderAjax('partials/blocks/clients/_clients_fields_list', [
+                'fields' => $this->getFieldsList(),
+                'section' => $this,
+                'formula_model' => $this->getFormulaModel(),
+                'formulas' => $this->getFormulasList()
+            ])
         ];
     }
 
@@ -59,11 +74,10 @@ class ActivitySectionClients extends ActivityExtendedStatisticSections {
             if ($model->save()) {
                 return array_merge([ 'success' => true,
                     'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
+                    'section_id' => $this->id
                 ], $this->renderFields($view));
             }
         }
-
-        var_dump($model->getErrors());
 
         return [ 'success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.') ];
     }
