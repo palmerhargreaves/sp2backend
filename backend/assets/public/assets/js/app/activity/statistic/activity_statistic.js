@@ -11,15 +11,21 @@ extend(ActivityStatistic, BaseForm, {
     },
 
     initEvents: function () {
+        $(document).on('change', '.js-not-using-importer-config, .js-pre-check-statistic-config', $.proxy(this.onChangeActivityParams, this));
+        $(document).on('change', '.js-activity-statistic-quarter', $.proxy(this.onChangeActivityStatisticQuarter, this));
+
         $(document).on('click', '.js-disable-activity-static-block', $.proxy(this.onDisableActivityStatisticBlock, this));
         $(document).on('click', '.js-activate-activity-static-block', $.proxy(this.onActivateActivityStatisticBlock, this));
 
         $(document).on('click', '.js-load-block-settings-and-fields', $.proxy(this.onLoadBlockData, this));
 
         $(document).on("input", ".field-item", $.proxy(this.onFieldDataChanged, this));
+        $(document).on("change", ".field-item", $.proxy(this.onFieldDataChanged, this));
 
         $(document).on("click", ".js-btn-save-field", $.proxy(this.onSaveField, this));
         $(document).on("click", ".js-btn-delete-field", $.proxy(this.onDeleteField, this));
+
+        $(document).on("click", "#js-config-statistic-params", $.proxy(this.onShowStatisticConfig, this));
 
         new ActivityBlockForm({form: '#form-block-settings'}).start();
         new ActivityBlockForm({form: '#form-new-field-add'}).start();
@@ -29,6 +35,60 @@ extend(ActivityStatistic, BaseForm, {
             custom_fn: $.proxy(this.formulaWorkflow, this)
         }).start();
 
+    },
+
+    onShowStatisticConfig: function(event) {
+        var element = $(event.currentTarget);
+
+        this.showHideConfigBtn(false);
+
+        $.post(element.data('url'), {
+            id: element.data('id')
+        }, $.proxy(this.onShowConfigResult, this));
+    },
+
+    onShowConfigResult: function(result) {
+        this.getContentContainer().html(result.html);
+    },
+
+    onChangeActivityStatisticQuarter: function(event) {
+        var element = $(event.currentTarget), quarters = [];
+
+        $('.js-activity-statistic-quarter').each(function(ind, el) {
+            if ($(el).is(':checked')) {
+                quarters.push($(el).data('quarter'));
+            }
+        });
+
+        $.post(element.data('url'), {
+            id: element.data('id'),
+            quarters: quarters.join(':'),
+            year: element.data('year')
+        }, $.proxy(this.onBindActivityQuarterResult, this));
+    },
+
+    onBindActivityQuarterResult: function(result) {
+        result.success ? Materialize.toast("Данные успешно сохранены.", 2500) : Materialize.toast("Ошибка сохранения данных.", 2500);
+    },
+
+    onChangeActivityParams: function(event) {
+        var element = $(event.currentTarget), fields = [];
+
+        $(".form-config-field-" + getElementData(element, "id")).each(function(ind, el) {
+            if ($(el).hasClass("checkbox")) {
+                fields.push({
+                    field: $(el).data("field"),
+                    val: $(el).is(":checked") ? 1 : 0
+                });
+            }
+        });
+
+        $.post(getElementData(element, "url"), {
+            activity: getElementData(element, "id"),
+            fields: fields
+        }, function(result) {
+            result.success ? Materialize.toast("Данные успешно сохранены.", 2500) : Materialize.toast("Ошибка сохранения данных.", 2500);
+        });
     },
 
     onLoadBlockData: function (event) {
@@ -52,6 +112,8 @@ extend(ActivityStatistic, BaseForm, {
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
             }
+
+            this.showHideConfigBtn(true);
 
             this.initElements(result);
             //table.addClass("has-sort");
@@ -85,6 +147,7 @@ extend(ActivityStatistic, BaseForm, {
             $('.block-row-item-' + result.section_template_id).html(result.block_html);
 
             this.initElements(result);
+            this.showHideConfigBtn(false);
 
             Materialize.toast("Блок успешно отключен.", 2500);
 
@@ -118,6 +181,7 @@ extend(ActivityStatistic, BaseForm, {
 
             this.initElements(result);
 
+            this.showHideConfigBtn(true);
             Materialize.toast("Блок успешно активирован.", 2500);
         } else {
             Materialize.toast("Ошибка сохранения данных.", 2500)
@@ -145,9 +209,9 @@ extend(ActivityStatistic, BaseForm, {
 
     onSaveField: function (event) {
         var element = $(event.currentTarget).parent(), parent = element.closest("tr"), url = parent.data("url"),
-            data = [];
+            data = [], self = this;
 
-        parent.find("input,select").each(function (index, item) {
+        parent.find("input,select,textarea").each(function (index, item) {
             if ($(item).hasClass("checkbox")) {
                 data.push({
                     field: $(item).data("field"),
@@ -168,6 +232,8 @@ extend(ActivityStatistic, BaseForm, {
         }, function (result) {
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
+
+                self.initElements(result);
             }
 
             Materialize.toast(result.msg, 2500);
@@ -204,15 +270,40 @@ extend(ActivityStatistic, BaseForm, {
     },
 
     /**
-     * Кастомная валидация формы
+     * Кастомный обработчик событий для блоков с вычисляемыми полями
      */
     formulaWorkflow: function () {
-        $(document).on("change", ".ch-calc-field", $.proxy(this.onChangeCalcType, this));
+        $(document).on("change", ".ch-calc-field", $.proxy(this.onCheckUncheckFieldAndFormula, this));
         $(document).on("click", "#js-save-calc-value", $.proxy(this.onAddNewFormula, this));
         $(document).on("click", ".delete-formula-field", $.proxy(this.onDeleteFormulaField, this));
+        $(document).on("change", "#field-calc-type", $.proxy(this.onChangeCalcType, this));
+        $(document).on("click", ".js-btn-edit-field", $.proxy(this.onEditCalculatedField, this));
     },
 
-    onChangeCalcType: function(event) {
+    onEditCalculatedField: function(event) {
+        var element = $(event.currentTarget);
+
+        $.post(element.data('url'), {
+            field_id: element.data('id'),
+            section_id: element.data('section-id')
+        }, $.proxy(this.onEditCalculatedFieldResult, this));
+    },
+
+    onEditCalculatedFieldResult: function(result) {
+        if (result.success) {
+            $('#container-calculated-field').html(result.html);
+
+            this.initElements(result);
+
+            offset = $('#calculated_field_ancor').offset().top - 10;
+            $('#modal-dialog').animate({
+                    scrollTop: offset + "px"
+                },
+                {duration: 500});
+        }
+    },
+
+    onCheckUncheckFieldAndFormula: function(event) {
         var checked_calc_fields = this.getCalcCheckedFields(), element = $(event.currentTarget);
 
         if (element.is(":checked")) {
@@ -221,29 +312,55 @@ extend(ActivityStatistic, BaseForm, {
             $("li[data-id='" + element.data("id") + "']").remove();
         }
 
-        checked_calc_fields.length >= 2 ? $("#js-save-calc-value").fadeIn() : $("#js-save-calc-value").fadeOut();
+        this.getFieldCalcType().val() == 'percent' && checked_calc_fields.length >= 1
+            ? $("#js-save-calc-value").fadeIn()
+            : checked_calc_fields.length >= 2 ? $("#js-save-calc-value").fadeIn() : $("#js-save-calc-value").fadeOut();
+    },
+
+    onChangeCalcType: function(event) {
+        var checked_calc_fields = this.getCalcCheckedFields(), element = $(event.currentTarget);
+
+        element.val() == 'percent' && checked_calc_fields.length >= 1
+            ? $("#js-save-calc-value").fadeIn()
+            : checked_calc_fields.length >= 2 ? $("#js-save-calc-value").fadeIn() : $("#js-save-calc-value").fadeOut();
     },
 
     onAddNewFormula: function(event) {
-        var element = $(event.target).parent(), items = [];
+        event.preventDefault();
 
-        items = this.getCalcCheckedFields();
+        var element = $(event.currentTarget), self = this, field_header = $.trim($('#calculated_field_header').val());
 
-        if (items.length < 2 && this.getFieldCalcType().val() != 'multiple') {
+        var items = [];
+        $("#checked-calc-field .dd-item").each(function(ind, item) {
+            items.push({
+                id: $(item).data("id")
+            });
+        });
+
+        if (field_header.length == 0) {
+            Materialize.toast("Введите название вычисляемого поля.", 2500);
+            return;
+        }
+
+        if (items.length < 2 && this.getFieldCalcType().val() != 'percent') {
             Materialize.toast("Для продолжения необходимо выбрать несколько полей.", 2500);
             return;
         }
 
         $.post(element.data("url"), {
             data: items,
-            section_id: element.data("id"),
-            calc_type: $("#field-calc-type").val()
+            field_header: field_header,
+            field_id: element.data('id') != undefined ? element.data('id') : '',
+            section_id: element.data("section-id"),
+            calc_type: $("#field-calc-type").val(),
+            show_in_export: $('#show_in_export_calc').is(':checked') ? 1 : 0,
+            show_in_statistic: $('#show_in_statistic_calc').is(':checked') ? 1 : 0,
         }, function(result) {
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
             }
 
-            this.initElements(result);
+            self.initElements(result);
 
             Materialize.toast(result.msg, 2500);
         });
@@ -276,5 +393,9 @@ extend(ActivityStatistic, BaseForm, {
 
     getFieldCalcType: function() {
         return $('#field-calc-type');
+    },
+
+    showHideConfigBtn: function(show) {
+        show ? $('#js-config-statistic-params').fadeIn() : $('#js-config-statistic-params').fadeOut();
     }
 });

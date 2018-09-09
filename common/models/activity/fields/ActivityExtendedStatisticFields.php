@@ -91,6 +91,14 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     }
 
     /**
+     * Тип
+     * @return mixed
+     */
+    public function getTypeLabel() {
+        return self::getFieldTypesList()[$this->value_type];
+    }
+
+    /**
      * Получить список дилерских групп
      * @return array
      */
@@ -233,31 +241,56 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
      * @param $postData
      * @return array
      */
-    public static function addNewFormula ( $postData )
+    public static function addNewCalculatedField ( $postData )
     {
+        $is_new = true;
+
         $section = ActivityExtendedStatisticSectionsTemplates::getSection();
         if (!$section) {
             return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при добавлении формулы.') ];
         }
 
-        $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
-
-        $new_calc_field->section_id = $section->id;
-        $new_calc_field->calc_type = $postData[ 'calc_type' ];
-        $new_calc_field->activity_id = $section->activity_id;
-
-        if ($postData[ 'calc_type' ] != 'multiple') {
-            $new_calc_field->parent_field = $postData[ "data" ][0][ 'id' ];
-            $new_calc_field->calc_field = $postData[ "data" ][1][ 'id' ];
+        if (empty($postData['field_id'])) {
+            $field = new ActivityExtendedStatisticFields();
+            $field->setAttributes([
+                'header' => $postData[ 'field_header' ],
+                'value_type' => 'calc',
+                'activity_id' => $section->activity_id,
+                'parent_id' => $section->id,
+                'status' => 1,
+                'show_in_export' => $postData[ 'show_in_export' ],
+                'show_in_statistic' => $postData[ 'show_in_statistic' ]
+            ]);
         } else {
-            $new_calc_field->parent_field = $postData[ "data" ][0][ 'id' ];
+            $is_new = false;
+            //Удаляем все привязанные поля
+            ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $postData['field_id']]);
+
+            $field = ActivityExtendedStatisticFields::findOne(['id' => $postData['field_id']]);
+            $field->setAttributes([
+                'header' => $postData[ 'field_header' ],
+                'show_in_export' => $postData[ 'show_in_export' ],
+                'show_in_statistic' => $postData[ 'show_in_statistic' ]
+            ]);
         }
 
-        if (!$new_calc_field->save(false)) {
-            return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при добавлении формулы.') ];
+        if ($field->save(false)) {
+
+            foreach ($postData[ "data" ] as $calc_field_item) {
+                $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
+
+                $new_calc_field->parent_field = $field->id;
+                $new_calc_field->calc_field = $calc_field_item[ 'id' ];
+                $new_calc_field->calc_type = $postData[ 'calc_type' ];
+                $new_calc_field->activity_id = $field->activity_id;
+
+                $new_calc_field->save(false);
+            }
+
+            return [ 'success' => true, 'msg' => Yii::t('app', $is_new ? 'Вычисляемое поле успешно добавлено.' : 'Параметры поля успешно изменены.'), 'section' => $section ];
         }
 
-        return [ 'success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.'), 'section' => $section ];
+        return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка добавления вычисляемого поля.') ];
     }
 
     public static function makeSortFields ()
@@ -277,5 +310,20 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
         }
 
         return [ $position > 1 ? true : false ];
+
+    }
+
+    public function getCalcFieldsNames() {
+        $fields_names = [];
+
+        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
+        foreach ($calc_fields as $field) {
+            $calc_field = ActivityExtendedStatisticFields::findOne(['id' => $field->calc_field]);
+            if ($calc_field) {
+                $fields_names[] = $calc_field->header . '&nbsp;<span class="task-cat teal" style="margin-left: 0px;">'.self::getCalcTypeName($calc_field->calc_type).'</span>&nbsp;';
+            }
+        }
+
+        return  implode(' ', $fields_names);
     }
 }

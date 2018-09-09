@@ -21,11 +21,13 @@ use yii\helpers\Url;
                         data-position="top" data-delay="50" data-tooltip='Параметры'
                         data-url="<?php echo Url::to(['activity-statistic/load-block-data']); ?>"
                         data-section-id="<?php echo $section_template['section']->id; ?>" style="cursor: pointer;" <?php endif; ?> >
-
                     </i>
                 <?php endif; ?>
             </span>
-            <p></p>
+
+            <?php if ($section_template['section']): ?>
+                <p><?php echo sprintf('Привязанных полей: %d', $section_template['section']->getFieldsCount()); ?></p>
+            <?php endif; ?>
         </div>
         <div class="card-action">
             <?php if ($section_template['section'] && $section_template['section']->status): ?>

@@ -29,7 +29,7 @@ class ActivityVideoRecordsStatistics extends \yii\db\ActiveRecord
     {
         return [
             [['header', 'activity_id'], 'required'],
-            [['activity_id', 'status', 'not_using_importer'], 'integer'],
+            [['activity_id', 'status', 'not_using_importer', 'allow_statistic_pre_check'], 'integer'],
             [['header'], 'string', 'max' => 255],
             [['last_updated_at'], 'safe'],
         ];

@@ -9,9 +9,9 @@ BaseForm = function(config) {
 BaseForm.prototype = {
     initElements: function(result) {
         $('select').material_select();
-        $('.tooltipped').tooltip({
+        /*$('.tooltipped').tooltip({
             delay: 50
-        });
+        });*/
 
         if (result != undefined) {
             if (result.section_id != undefined) {

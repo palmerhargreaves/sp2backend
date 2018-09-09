@@ -6,13 +6,22 @@
  * Time: 14:22
  */
 
-use yii\helpers\Url;
-
-$colors = ["blue", "green", "red", "orange", "yellow"];
 ?>
 
 <a id="activity-statistic-params"></a>
 <h4 class="header">Настройка параметров статистики</h4>
+
+<a id="js-config-statistic-params"
+   style="position: absolute; top: 35px; right: 10px; display: none;"
+   data-url="<?php echo \yii\helpers\Url::to(['activity-statistic/show-config']); ?>"
+   class="btn-floating activator btn-move-up waves-effect waves-light green darken-2 right tooltipped"
+   data-position="top"
+   data-delay="50"
+   data-tooltip="<?php echo Yii::t('app', 'Параметры статистики'); ?>"
+   data-id="<?php echo $activity->id; ?>">
+
+    <i class="mdi-action-settings"></i>
+</a>
 
 <div class="row">
     <div class="col s12 m4 l3">
@@ -23,7 +32,9 @@ $colors = ["blue", "green", "red", "orange", "yellow"];
         <?php endforeach; ?>
     </div>
 
-    <div id="container-activity-statistic-data" class="col s12 m8 l9"></div>
+    <div id="container-activity-statistic-data" class="col s12 m8 l9">
+        <?php echo $statistic_config_content; ?>
+    </div>
 
     <div id="container-activity-statistic-fields-list" class="col s12 m8 l9"></div>
 </div>

@@ -5,6 +5,7 @@ namespace common\models\activity\sections;
 use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\fields\ActivityExtendedStatisticFields;
 use common\models\activity\fields\blocks\ActivityTargetBlock;
+use common\models\activity\fields\blocks\BaseBlockModel;
 
 /**
  * Created by PhpStorm.
@@ -15,7 +16,7 @@ use common\models\activity\fields\blocks\ActivityTargetBlock;
  * @property mixed $model
  */
 
-class ActivitySectionTargets extends ActivityExtendedStatisticSections {
+class ActivitySectionTargets extends BaseBlockModel {
     protected $_block_template = 'partials/blocks/targets/_targets';
 
     public function beforeSave($insert)
@@ -30,42 +31,6 @@ class ActivitySectionTargets extends ActivityExtendedStatisticSections {
      */
     public function getModel() {
         return new ActivityTargetBlock();
-    }
-
-    public function render($view)
-    {
-        $html = parent::render($view);
-        $html .= $view->renderAjax($this->_block_template, [ 'section' => $this, 'model' => $this->getModel() ]);
-
-        return $html;
-    }
-
-    /**
-     * Добавление поля
-     */
-    public function addBlockField($view) {
-        $activity_id = \Yii::$app->request->post('activity_id');
-
-        $model = $this->getModel();
-        if ($model->load(\Yii::$app->request->post())) {
-            $model->parent_id = $this->id;
-            $model->activity_id = $activity_id;
-            $model->value_type = 'dig';
-            $model->status = 1;
-
-            if (ActivityExtendedStatisticFields::findOne(['activity_id' => $model->activity_id, 'parent_id' => $model->parent_id, 'dealers_group' => $model->dealers_group])) {
-                return [ 'success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля. Для выбранной группы дилеров уже создано поле.') ];
-            }
-
-            //Добавляем новое поле и получаем список всех полей привязанных к блоку
-            if ($model->save()) {
-                return array_merge([ 'success' => true,
-                    'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
-                ], $this->renderFields($view));
-            }
-        }
-
-        return [ 'success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.') ];
     }
 
     public function renderFields($view) {

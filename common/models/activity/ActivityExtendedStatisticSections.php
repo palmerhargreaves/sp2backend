@@ -22,6 +22,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
     protected $_template = '';
 
     protected $_block_template = '';
+    protected $_block_fields_templates = '';
 
     protected $_fields_container = '#container-activity-statistic-fields-list';
 
@@ -144,7 +145,15 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
      * Получить список доступных формул для раздела
      * @return array|\yii\db\ActiveRecord[]
      */
-    public function getFormulasList() {
-        return ActivityExtendedStatisticFieldsCalculated::find()->where(['section_id' => $this->id, 'activity_id' => $this->activity_id])->orderBy(['position' => SORT_ASC])->all();
+    public function getCalculatedFieldList() {
+        return ActivityExtendedStatisticFields::find()->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id, 'value_type' => ActivityExtendedStatisticFields::CALC])->orderBy(['position' => SORT_ASC])->all();
+    }
+
+    /**
+     * Получить количестов привязанных полей к блоку
+     * @return int|string
+     */
+    public function getFieldsCount() {
+        return ActivityExtendedStatisticFields::find()->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])->count();
     }
 }
