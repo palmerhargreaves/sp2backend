@@ -45,6 +45,10 @@ use yii\helpers\Url;
                                    data-regexp="/^[0-9.]+$/"
                                    type="text"
                                    value="<?php echo $field->def_value; ?>"/>
+
+                            <input class="field-item" data-field="editable"
+                                   type="hidden"
+                                   value="<?php echo $field->editable; ?>"/>
                         </td>
                         <td>
                             <?php echo ActivityExtendedStatisticFields::getDealersGroups()[$field->dealers_group]; ?>
