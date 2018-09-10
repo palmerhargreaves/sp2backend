@@ -2,8 +2,6 @@
 
 namespace common\models\activity\sections;
 
-use common\models\activity\ActivityExtendedStatisticSections;
-use common\models\activity\fields\ActivityExtendedStatisticFields;
 use common\models\activity\fields\blocks\ActivityTargetBlock;
 use common\models\activity\fields\blocks\BaseBlockModel;
 
@@ -15,8 +13,8 @@ use common\models\activity\fields\blocks\BaseBlockModel;
  *
  * @property mixed $model
  */
-
-class ActivitySectionTargets extends BaseBlockModel {
+class ActivitySectionTargets extends BaseBlockModel
+{
     protected $_block_template = 'partials/blocks/targets/_targets';
 
     public function beforeSave($insert)
@@ -29,14 +27,45 @@ class ActivitySectionTargets extends BaseBlockModel {
     /**
      * @return mixed
      */
-    public function getModel() {
+    public function getModel()
+    {
         return new ActivityTargetBlock();
     }
 
-    public function renderFields($view) {
+    public function renderFields($view)
+    {
         return [
             'html_container' => $this->_fields_container,
-            'html' => $view->renderAjax('partials/blocks/targets/_targets_fields_list', [ 'fields' => $this->getFieldsList(), 'section' => $this ])
+            'html' => $view->renderAjax('partials/blocks/targets/_targets_fields_list', ['fields' => $this->getFieldsList(), 'section' => $this])
         ];
+    }
+
+    public function addBlockField($view)
+    {
+        $activity_id = \Yii::$app->request->post('activity_id');
+
+        $model = $this->getModel();
+        if ($model->load(\Yii::$app->request->post())) {
+
+            if (ActivityTargetBlock::find()->where(['activity_id' => $activity_id, 'parent_id' => $this->id, 'dealers_group' => $model->dealers_group])->count() > 0) {
+                return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля. Для выбранной группы дилеров уже создано поле.')];
+            }
+
+            $model->editable = 0;
+            $model->parent_id = $this->id;
+            $model->activity_id = $activity_id;
+            $model->value_type = 'dig';
+            $model->status = 1;
+
+            //Добавляем новое поле и получаем список всех полей привязанных к блоку
+            if ($model->save()) {
+                return array_merge(['success' => true,
+                    'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
+                    'section_id' => $this->id
+                ], $this->renderFields($view));
+            }
+        }
+
+        return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.')];
     }
 }
