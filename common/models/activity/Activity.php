@@ -166,4 +166,16 @@ class Activity extends CustomRecord
     public function getActivityVideoStatistic() {
         return ActivityVideoRecordsStatistics::find()->where(['activity_id' => $this->id])->one();
     }
+
+    public function checkStatisticExists() {
+        if (!$this->getActivityVideoStatistic()) {
+            $statistic = new ActivityVideoRecordsStatistics();
+            $statistic->setAttributes([
+                'activity_id' => $this->id,
+                'header' => sprintf('Статистика (%d)', $this->id),
+                'status' => 1
+            ]);
+            $statistic->save();
+        }
+    }
 }

@@ -36,7 +36,7 @@ use yii\widgets\ActiveForm;
 
         <div class="row">
             <div class="input-field col s12">
-                <select name="ActivityOtherIndicatorsBlock[value_type]" class="block-selectbox">
+                <select name="ActivityDataByOrdersBlock[value_type]" class="block-selectbox">
                     <?php foreach (array('dig' => Yii::t('app', 'Число'), 'file' => Yii::t('app', 'Файл')) as $key => $value): ?>
                         <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
                     <?php endforeach; ?>

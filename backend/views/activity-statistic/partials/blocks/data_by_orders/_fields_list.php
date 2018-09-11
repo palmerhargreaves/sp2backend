@@ -46,7 +46,7 @@ use yii\helpers\Url;
 
                         <td>
                             <select name="ActivityOtherIndicatorsBlock[value_type]" class="block-selectbox field-item" data-field="value_type">
-                                <?php foreach (array('dig' => Yii::t('app', 'Число'), 'text' => Yii::t('app', 'Текст')) as $key => $value): ?>
+                                <?php foreach (array('dig' => Yii::t('app', 'Число'), 'file' => Yii::t('app', 'Файл')) as $key => $value): ?>
                                     <option value="<?php echo $key; ?>" <?php echo $key == $field->value_type ? "selected" : ""; ?>><?php echo $value; ?></option>
                                 <?php endforeach; ?>
                             </select>

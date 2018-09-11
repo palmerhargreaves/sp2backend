@@ -11,6 +11,7 @@ use common\models\activity\ActivityStatisticsPeriods;
 use common\models\user\User;
 use yii\helpers\Url;
 
+$activity->checkStatisticExists();
 ?>
 
 <div class="card-panel" style="padding-top: 3px;">

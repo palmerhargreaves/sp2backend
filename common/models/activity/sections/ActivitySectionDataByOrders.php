@@ -36,4 +36,25 @@ class ActivitySectionDataByOrders extends BaseBlockModel {
             'html' => $view->renderAjax($this->_block_fields_templates, [ 'fields' => $this->getFieldsList(), 'section' => $this ])
         ];
     }
+
+    public function addBlockField($view) {
+        $activity_id = \Yii::$app->request->post('activity_id');
+
+        $model = $this->getModel();
+        if ($model->load(\Yii::$app->request->post())) {
+            $model->parent_id = $this->id;
+            $model->activity_id = $activity_id;
+            $model->status = 1;
+
+            //Добавляем новое поле и получаем список всех полей привязанных к блоку
+            if ($model->save()) {
+                return array_merge([ 'success' => true,
+                    'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
+                    'section_id' => $this->id
+                ], $this->renderFields($view));
+            }
+        }
+
+        return [ 'success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.') ];
+    }
 }
