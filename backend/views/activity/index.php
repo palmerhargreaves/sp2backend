@@ -218,7 +218,7 @@ use yii\widgets\Pjax;
                                     'attribute' => Yii::t('app', 'Действия'),
                                     'value' => function ($model) {
                                         return '
-                                            <a href="#modal-dialog" data-url="'.Url::to(['/activity-statistic/show-statistic-config', 'id' => $model->id]).'" class="modal-trigger js-show-statistic-config btn-floating waves-effect waves-light green tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация параметров статистики') . '"><i class="mdi-action-assessment"></i></a>
+                                            <a href="#modal-config-statistic-by-blocks" data-url="'.Url::to(['/activity-statistic/show-statistic-config', 'id' => $model->id]).'" data-content-container="modal-config-statistic-by-blocks" class="modal-trigger js-show-statistic-config btn-floating waves-effect waves-light green tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация параметров статистики') . '"><i class="mdi-action-assessment"></i></a>
                                             <a href="#!" data-url="'.Url::to(['/activity/show-config-options', 'id' => $model->id]).'" class="js-show-config btn-floating waves-effect waves-light grey tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация') . '"><i class="mdi-action-settings"></i></a>
                                             <a href="' . Url::to(['/activity/info', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light blue tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Редактировать') . '"><i class="mdi-editor-mode-edit"></i></a>
                                             <a href="' . Url::to(['/activity/delete', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light red tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Удалить') . '"><i class="mdi-content-clear"></i></a>';
@@ -260,8 +260,8 @@ use yii\widgets\Pjax;
         </div>
     </div>
 
-    <div id="modal-dialog" class="modal modal-window bottom-sheet" style="min-height: 80%; max-height: 99%;">
-        <div class="modal-content modal-config-statistic-content">
+    <div id="modal-config-statistic-by-blocks" class="modal modal-window bottom-sheet" style="min-height: 80%; max-height: 99%;">
+        <div class="modal-content model-email-content modal-config-statistic-content">
 
         </div>
     </div>
@@ -271,16 +271,6 @@ use yii\widgets\Pjax;
     window.activity_statistic = new ActivityStatistic({
         
     }).start();
-    
-    $(document).on("click", ".modal-trigger", function(event) {
-        var element = $(event.currentTarget);
-
-        $.post(element.data("url"), {}, function(result) {
-            $(".modal-config-statistic-content").html(result);
-            
-            $("select").material_select();
-        });
-    });
     
     $(".activity-active").each(function(index, item) {
         $(item).sparkline($(item).data("items").split(":"), {
@@ -313,7 +303,7 @@ use yii\widgets\Pjax;
     });
     
     $(document).on("click", ".js-show-config", function(e) {
-        var element = $(e.target);
+        var element = $(e.currentTarget);
          
         $("#chat-out").html("");
         $(".chat-collapse").trigger("click");
@@ -333,7 +323,7 @@ use yii\widgets\Pjax;
                     delay: 50
                 });
             
-                $(\'.modal-trigger\').leanModal({
+               $(\'.modal-trigger\').leanModal({
                     dismissible: true, // Modal can be dismissed by clicking outside of the modal
                     opacity: .5, // Opacity of modal background
                     in_duration: 300, // Transition in duration
@@ -344,7 +334,7 @@ use yii\widgets\Pjax;
                     complete: function() { 
                     //alert(\'Closed\'); 
                     } // Callback for Modal close
-                });
+               });
             });
         }, 200);
     });
@@ -403,7 +393,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal, .js-show-agreement-by-user-config-modal", function(event) {
+    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal, .js-show-agreement-by-user-config-modal, .js-show-statistic-config", function(event) {
         var element = $(event.currentTarget);
         
         $.post(getElementData(element, "url"), {
