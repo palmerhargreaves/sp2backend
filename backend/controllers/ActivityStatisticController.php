@@ -179,7 +179,14 @@ class ActivityStatisticController extends PageController
         if ($field && $section) {
             ActivityExtendedStatisticFields::deleteAll([ 'id' => $field->id ]);
 
-            return [ 'success' => true, 'message' => 'Поле успешно удалено.', 'html' => $section->render($this), 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ];
+            return [
+                'success' => true,
+                'message' => 'Поле успешно удалено.',
+                'html' => $section->render($this), 'html_fields' => $section->renderFields($this),
+                'section_id' => $section->id,
+                'fields_count' => $section->getFieldsCount(),
+                'calculated_fields_count' => $section->getCalculatedFieldsCount()
+            ];
         }
 
         return [ 'success' => false, 'message' => 'Ошибка удаления поля.' ];

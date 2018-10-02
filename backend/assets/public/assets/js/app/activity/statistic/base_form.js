@@ -41,4 +41,14 @@ BaseForm.prototype = {
         }
     },
 
+    /**
+     * Обновить количество привязанніх к блоку полей
+     * @param response
+     */
+    reloadFieldsCount: function(response) {
+        if (response.fields_count != undefined && response.calculated_fields_count != undefined) {
+            response.fields_count > 0 ? $('#section-fields-count-' + response.section_id).show().html('Полей: ' + response.fields_count) : $('#section-fields-count-' + response.section_id).hide();
+            response.calculated_fields_count > 0 ? $('#section-calc-fields-count-' + response.section_id).show().html('Вычисляемых полей: ' + response.calculated_fields_count) : $('#section-calc-fields-count-' + response.section_id).hide();
+        }
+    }
 }

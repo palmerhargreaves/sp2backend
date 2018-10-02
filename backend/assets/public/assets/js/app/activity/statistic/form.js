@@ -41,6 +41,7 @@ extend(ActivityBlockForm, BaseForm, {
                 if (response.html_container != undefined) {
                     $(response.html_container).html(response.html);
 
+                    self.reloadFieldsCount(response);
                     self.initElements(response);
                 }
             },
@@ -50,6 +51,7 @@ extend(ActivityBlockForm, BaseForm, {
         });
 
         return false;
-    }
+    },
+
 });
 

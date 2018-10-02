@@ -154,6 +154,34 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
      * @return int|string
      */
     public function getFieldsCount() {
-        return ActivityExtendedStatisticFields::find()->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])->count();
+        return ActivityExtendedStatisticFields::find()
+            ->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])
+            ->andWhere(['!=', 'value_type', 'calc'])
+            ->count();
     }
+
+    /**
+     * Получить список вычисляемых полей
+     */
+    public function getCalculatedFieldsCount() {
+        return ActivityExtendedStatisticFields::find()
+            ->where(['parent_id' => $this->id, 'activity_id' => $this->activity_id])
+            ->andWhere(['=', 'value_type', 'calc'])
+            ->count();
+    }
+
+    /**
+     * Возврат результата добавления поля
+     * @param $view
+     * @return mixed
+     */
+    public function addFieldSuccess($view) {
+        return array_merge([ 'success' => true,
+            'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
+            'section_id' => $this->id,
+            'fields_count' => $this->getFieldsCount(),
+            'calculated_fields_count' => $this->getCalculatedFieldsCount()
+        ], $this->renderFields($view));
+    }
+
 }

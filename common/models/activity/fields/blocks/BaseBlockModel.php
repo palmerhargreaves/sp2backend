@@ -55,10 +55,7 @@ class BaseBlockModel extends ActivityExtendedStatisticSections
 
             //Добавляем новое поле и получаем список всех полей привязанных к блоку
             if ($model->save()) {
-                return array_merge([ 'success' => true,
-                    'message' => \Yii::t('app', 'Новое поле успешно добавлено.'),
-                    'section_id' => $this->id
-                ], $this->renderFields($view));
+                return $this->addFieldSuccess($view);
             }
         }
 

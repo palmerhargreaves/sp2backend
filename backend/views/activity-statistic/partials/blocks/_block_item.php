@@ -26,7 +26,14 @@ use yii\helpers\Url;
             </span>
 
             <?php if ($section_template['section']): ?>
-                <p><?php echo sprintf('Привязанных полей: %d', $section_template['section']->getFieldsCount()); ?></p>
+                <?php
+                    $fields_count = $section_template['section']->getFieldsCount();
+                    $calc_fields_count = $section_template['section']->getCalculatedFieldsCount()
+                ?>
+
+                <p id="section-fields-count-<?php echo $section_template['section']->id; ?>" style="display: <?php echo $fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Полей: %d', $fields_count); ?></p>
+                <p id="section-calc-fields-count-<?php echo $section_template['section']->id; ?>"  style="display: <?php echo $calc_fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Вычисляемых полей: %d', $calc_fields_count); ?></p>
+
             <?php endif; ?>
         </div>
         <div class="card-action">

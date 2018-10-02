@@ -261,6 +261,8 @@ extend(ActivityStatistic, BaseForm, {
 
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
+
+                this.reloadFieldsCount(result);
             }
 
             this.initElements(result);

@@ -43,4 +43,11 @@ interface ActivitySectionInterface {
      * @return mixed
      */
     public function addBlockField($view);
+
+    /**
+     * Возврат результата добавления поля
+     * @param $view
+     * @return mixed
+     */
+    public function addFieldSuccess($view);
 }
