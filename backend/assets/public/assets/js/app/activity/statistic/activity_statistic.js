@@ -309,7 +309,7 @@ extend(ActivityStatistic, BaseForm, {
         var checked_calc_fields = this.getCalcCheckedFields(), element = $(event.currentTarget);
 
         if (element.is(":checked")) {
-            $("#checked-calc-field").append("<li class='dd-item' data-id='" + element.data("id") + "'><div class='dd-handle'>" + element.data("name") + "</div></li>");
+            $("#checked-calc-field").append("<li class='dd-item' data-id='" + element.data("id") + "'><div class='dd-handle'>" + "[" + element.data('section-name') + "] " + element.data("name") + "</div></li>");
         } else {
             $("li[data-id='" + element.data("id") + "']").remove();
         }
@@ -363,6 +363,7 @@ extend(ActivityStatistic, BaseForm, {
             }
 
             self.initElements(result);
+            self.reloadFieldsCount(result);
 
             Materialize.toast(result.msg, 2500);
         });

@@ -14,6 +14,8 @@ BaseForm.prototype = {
         });*/
 
         if (result != undefined) {
+            $('.collapsible').collapsible();
+
             if (result.section_id != undefined) {
                 var dragger = tableDragger(document.querySelector(".sortable-list-" + result.section_id), {
                     mode: "row",

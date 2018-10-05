@@ -72,11 +72,22 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
     }
 
     public function getCalcFieldName() {
-        $field = ActivityExtendedStatisticFields::find()->where(['id' => $this->calc_field])->one();
-        if ($field) {
-            return $field->header;
+        if ($this->field) {
+            return $this->field->header;
         }
 
         return '';
+    }
+
+    public function getCalcFieldSectionName() {
+        if ($this->field) {
+            return $this->field->section->header;
+        }
+
+        return '';
+    }
+
+    public function getField() {
+        return $this->hasOne(ActivityExtendedStatisticFields::className(), ['id' => 'calc_field']);
     }
 }

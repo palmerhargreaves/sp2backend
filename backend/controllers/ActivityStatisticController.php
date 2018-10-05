@@ -177,16 +177,22 @@ class ActivityStatisticController extends PageController
         $section = ActivityExtendedStatisticSectionsTemplates::getSection();
 
         if ($field && $section) {
-            ActivityExtendedStatisticFields::deleteAll([ 'id' => $field->id ]);
-
-            return [
-                'success' => true,
-                'message' => 'Поле успешно удалено.',
-                'html' => $section->render($this), 'html_fields' => $section->renderFields($this),
-                'section_id' => $section->id,
-                'fields_count' => $section->getFieldsCount(),
-                'calculated_fields_count' => $section->getCalculatedFieldsCount()
-            ];
+            $delete_result = ActivityExtendedStatisticFields::deleteField([ 'id' => $field->id ]);
+            if ($delete_result['success']) {
+                return [
+                    'success' => true,
+                    'message' => $delete_result['message'],
+                    'html' => $section->render($this), 'html_fields' => $section->renderFields($this),
+                    'section_id' => $section->id,
+                    'fields_count' => $section->getFieldsCount(),
+                    'calculated_fields_count' => $section->getCalculatedFieldsCount()
+                ];
+            } else if (!$delete_result['success']) {
+                return [
+                    'success' => false,
+                    'messages' => $delete_result['message']
+                ];
+            }
         }
 
         return [ 'success' => false, 'message' => 'Ошибка удаления поля.' ];
@@ -200,7 +206,12 @@ class ActivityStatisticController extends PageController
         if ($result[ 'success' ]) {
             $section = $result[ 'section' ];
 
-            return array_merge($result, [ 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ]);
+            return array_merge($result, [
+                'html_fields' => $section->renderFields($this),
+                'section_id' => $section->id,
+                'fields_count' => $section->getFieldsCount(),
+                'calculated_fields_count' => $section->getCalculatedFieldsCount() ]
+            );
         }
 
         return $result;
@@ -247,7 +258,14 @@ class ActivityStatisticController extends PageController
         if ($field && $section) {
             ActivityExtendedStatisticFieldsCalculated::deleteAll([ 'id' => $field->id ]);
 
-            return [ 'success' => true, 'message' => 'Формула успешно удалена.', 'html_fields' => $section->renderFields($this), 'section_id' => $section->id ];
+            return [
+                'success' => true,
+                'message' => 'Формула успешно удалена.',
+                'html_fields' => $section->renderFields($this),
+                'section_id' => $section->id,
+                'fields_count' => $section->getFieldsCount(),
+                'calculated_fields_count' => $section->getCalculatedFieldsCount()
+            ];
         }
 
         return [ 'success' => false, 'message' => 'Ошибка удаления формулы.' ];
