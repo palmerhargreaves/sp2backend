@@ -285,23 +285,23 @@ use yii\widgets\Pjax;
         </div>
 
         <div class="model-email-content" style="padding-top: 0px;">
+            
+
             <div class="row">
-                <div class="row">
-                    <div class="file-field input-field">
-                        <div class="btn">
-                            <span>Файл</span>
-                            <?php echo $form->field($activity_company_type_image_model, 'path')->fileInput([ 'class' => 'file btn-primary', 'multiple' => false ]); ?>
-                        </div>
-                        <div class="file-path-wrapper">
-                            <input class="file-path validate" type="text" placeholder="Загрузите файл">
-                        </div>
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Файл</span>
+                        <?php echo $form->field($activity_company_type_image_model, 'path')->fileInput([ 'class' => 'file btn-primary', 'multiple' => false ]); ?>
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Загрузите файл">
                     </div>
                 </div>
-
-                <?php echo $form->field($activity_company_type_image_model, 'activity_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
-                <?php echo $form->field($activity_company_type_image_model, 'company_type_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
-                <?php echo $form->field($activity_company_type_image_model, 'id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
             </div>
+
+            <?php echo $form->field($activity_company_type_image_model, 'activity_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+            <?php echo $form->field($activity_company_type_image_model, 'company_type_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+            <?php echo $form->field($activity_company_type_image_model, 'id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
 
             <div class="row">
                 <div class="input-field col s12">
@@ -310,6 +310,8 @@ use yii\widgets\Pjax;
                     </button>
                 </div>
             </div>
+
+
         </div>
         <?php ActiveForm::end(); ?>
     </div>

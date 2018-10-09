@@ -321,9 +321,14 @@ class ActivityController extends PageController
      */
     public function actionUploadActivityCompanyTypeImage() {
 
-        $activity_company_type_image_model = new ActivityTypeCompanyImages();
-
         if (Yii::$app->request->isPost) {
+            $id = Yii::$app->request->post('ActivityTypeCompanyImages')['id'];
+
+            $activity_company_type_image_model = ActivityTypeCompanyImages::findOne(['id' => $id]);
+            if (is_null($activity_company_type_image_model)) {
+                $activity_company_type_image_model = new ActivityTypeCompanyImages();
+            }
+
             if ($activity_company_type_image_model->load(Yii::$app->request->post()) && $activity_company_type_image_model->validate()) {
 
                 if (!$activity_company_type_image_model->upload()) {
