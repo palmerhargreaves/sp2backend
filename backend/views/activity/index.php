@@ -265,12 +265,62 @@ use yii\widgets\Pjax;
 
         </div>
     </div>
+
+    <div id="modal-activity-company-image" class="modal">
+        <?php $form = ActiveForm::begin([
+            'id' => 'form-activity-company-image',
+            'action' => Url::to(['activity/upload-activity-company-type-image']),
+            'fieldConfig' => [
+            'template' => '{input}{error}'
+        ], 'options' => [ 'class' => 'col s12', 'enctype' => 'multipart/form-data' ] ]); ?>
+
+        <div class="modal-content">
+            <nav class="red">
+                <div class="nav-wrapper">
+                    <div class="left col s12 m12 l12">
+                        <h4 style="margin-top: 10px; margin-left: 20px;"><?php echo Yii::t('app', 'Добавить изображение'); ?></h4>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="model-email-content" style="padding-top: 0px;">
+            <div class="row">
+                <div class="row">
+                    <div class="file-field input-field">
+                        <div class="btn">
+                            <span>Файл</span>
+                            <?php echo $form->field($activity_company_type_image_model, 'path')->fileInput([ 'class' => 'file btn-primary', 'multiple' => false ]); ?>
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" type="text" placeholder="Загрузите файл">
+                        </div>
+                    </div>
+                </div>
+
+                <?php echo $form->field($activity_company_type_image_model, 'activity_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+                <?php echo $form->field($activity_company_type_image_model, 'company_type_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+                <?php echo $form->field($activity_company_type_image_model, 'id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+            </div>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class="btn cyan waves-effect waves-light right">
+                        <i class="mdi-content-save right"></i>&nbsp;<?= Yii::t('app', 'Добавить') ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>
 
 <?php $this->registerJs('
     window.activity_statistic = new ActivityStatistic({
         
     }).start();
+    
+    window.activity_company_type_image = new ActivityCompanyTypeImage({}).start();
     
     $(".activity-active").each(function(index, item) {
         $(item).sparkline($(item).data("items").split(":"), {

@@ -16,12 +16,14 @@ use common\models\activity\ActivitySpecialAgreementUsersList;
 use common\models\activity\ActivitySpecialists;
 use common\models\activity\ActivityStatisticPreCheckSearch;
 use common\models\activity\ActivityStatisticPreCheckUsers;
+use common\models\activity\ActivityTypeCompanyImages;
 use common\models\activity\utils\ActivitiesStatistics;
 use common\models\logs\Log;
 use richardfan\sortable\SortableAction;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 class ActivityController extends PageController
 {
@@ -68,6 +70,7 @@ class ActivityController extends PageController
                             'load-block-data',
                             'add-block-field',
                             'validate-block-data',
+                            'upload-activity-company-type-image'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -110,7 +113,9 @@ class ActivityController extends PageController
         $activitySearch = new ActivitySearch();
         $dataProvider = $activitySearch->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [ 'searchProvider' => $activitySearch, 'dataProvider' => $dataProvider ]);
+        $activity_company_type_image_model = new ActivityTypeCompanyImages();
+
+        return $this->render('index', [ 'searchProvider' => $activitySearch, 'dataProvider' => $dataProvider, 'activity_company_type_image_model' => $activity_company_type_image_model ]);
     }
 
     public function actionShowConfigOptions ()
@@ -311,5 +316,31 @@ class ActivityController extends PageController
         return [ 'success' => true ];
     }
 
+    /**
+     * Загрузка изоюражния для компании активности
+     */
+    public function actionUploadActivityCompanyTypeImage() {
 
+        $activity_company_type_image_model = new ActivityTypeCompanyImages();
+
+        if (Yii::$app->request->isPost) {
+            if ($activity_company_type_image_model->load(Yii::$app->request->post()) && $activity_company_type_image_model->validate()) {
+
+                if (!$activity_company_type_image_model->upload()) {
+                    Yii::$app->session->setFlash('error', Yii::t('app', 'Ошибка сохранения!'));
+
+                    return $this->redirect(Url::to([ 'list' ]));
+                }
+
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Изображение успешно сохранено!'));
+
+                return $this->redirect(Url::to([ 'list' ]));
+            } else {
+
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Ошибка сохранения!'));
+            }
+        }
+
+        return $this->redirect(Url::to([ 'list' ]));
+    }
 }

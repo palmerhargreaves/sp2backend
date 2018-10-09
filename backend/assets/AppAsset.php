@@ -76,6 +76,8 @@ class AppAsset extends AssetBundle
         "assets/js/app/activity/statistic/activity_statistic.js",
         "assets/js/app/activity/statistic/form.js",
 
+        "assets/js/app/activity/company/image.js",
+
     ];
 
     public $depends = [
