@@ -28,6 +28,10 @@ use yii\helpers\Url;
                             <div class="col s9">
                                 <input name="company-group" type="radio" id="company-<?php echo $company->id; ?>" <?php echo $company->id == $activity->type_company_id ? "checked" : ""; ?>>
                                 <label style="font-weight: normal; color: black;" for="company-<?php echo $company->id; ?>"><?php echo $company->name; ?></label>
+
+                                <?php if ($company_type_image): ?>
+                                    <img style="max-width: 100px;" src="<?php echo Yii::$app->params['images_container_url']; ?>company_types/<?php echo $company_type_image->path; ?>" />
+                                <?php endif; ?>
                             </div>
 
                             <div class="col s2">

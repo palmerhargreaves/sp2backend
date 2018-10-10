@@ -57,7 +57,7 @@ class ActivityTypeCompanyImages extends \yii\db\ActiveRecord
             return false;
         }
 
-        $dest_path = Yii::$app->params['basePathImages'].'company_types';
+        $dest_path = Yii::$app->params['basePathImages'].'company_types/';
         $gen_file_helper = new FilesHelper($dest_path);
         $gen_file_name = $gen_file_helper->generate($uploaded_file->name);
 
