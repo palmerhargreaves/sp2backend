@@ -10,9 +10,52 @@ use common\models\activity\ActivityStatisticPreCheckUsers;
 use common\models\activity\ActivityStatisticsPeriods;
 use common\models\user\User;
 use yii\helpers\Url;
+use yii\widgets\ActiveForm;
 
 $activity->checkStatisticExists();
 ?>
+
+<div class="card-panel">
+    <h4 class="header2">Параметры активности</h4>
+
+    <div class="row">
+        <?php $form = ActiveForm::begin([ 'id' => 'form-activity-settings',
+            'enableAjaxValidation' => false,
+            'enableClientValidation' => true,
+            'action' => Url::to(['activity/settings']),
+            'fieldConfig' => [
+                'template' => '{input}{error}'
+            ], 'options' => [ 'class' => 'col s12', ] ]); ?>
+        <div class="row">
+            <div class="input-field col s12">
+                <?php echo $form->field($activity_model, 'company_target')->textarea([ 'placeholder' => 'Цель кампании', 'disabled' => false, 'value' => $activity->company_target ]); ?>
+            </div>
+
+            <div class="input-field col s12">
+                <?php echo $form->field($activity_model, 'target_audience')->textarea([ 'placeholder' => 'Целевая аудитория', 'disabled' => false, 'value' => $activity->target_audience ]); ?>
+            </div>
+
+            <div class="input-field col s12">
+                <?php echo $form->field($activity_model, 'company_mechanics')->textarea([ 'placeholder' => 'Механика кампании', 'disabled' => false, 'value' => $activity->company_mechanics ]); ?>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="row">
+                <div class="input-field col s12">
+                    <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Сохранить
+                        <i class="mdi-content-send right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <input type="hidden" name="id" value="<?php echo $activity->id; ?>" />
+
+        <?php $form->end(); ?>
+    </div>
+</div>
+
 
 <div class="card-panel" style="padding-top: 3px;">
     <div class="row">

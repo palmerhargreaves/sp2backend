@@ -70,7 +70,8 @@ class ActivityController extends PageController
                             'load-block-data',
                             'add-block-field',
                             'validate-block-data',
-                            'upload-activity-company-type-image'
+                            'upload-activity-company-type-image',
+                            'settings'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -347,5 +348,21 @@ class ActivityController extends PageController
         }
 
         return $this->redirect(Url::to([ 'list' ]));
+    }
+
+    public function actionSettings() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if (Yii::$app->request->isPost) {
+            $activity = Activity::findOne(['id' => Yii::$app->request->post('id')]);
+
+            if ($activity->load(Yii::$app->request->post())) {
+                $activity->save(false);
+
+                return [ 'success' => true, 'message' => Yii::t('app', 'Параметры успешно сохранены.') ];
+            }
+        }
+
+        return [ 'success' => false ];
     }
 }

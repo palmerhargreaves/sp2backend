@@ -26,6 +26,14 @@ use yii\widgets\ActiveForm;
                 <?php echo $form->field($model, 'description')->textarea([ 'rows' => 6, 'placeholder' => 'Краткое описание блока', 'value' => $section->description ]); ?>
             </div>
 
+            <div class="input-field col s12">
+                <div class="row">
+                    <div class="col s1">&nbsp;</div>
+                    <div class="col s3"><img class="img-block-graph" title="" src="img/graphs/img_funnel_sm.jpg" data-type="waterfall" /></div>
+                    <div class="col s3"><img class="img-block-graph" title="" src="img/graphs/img_pie.jpg" data-type="pie" /></div>
+                </div>
+            </div>
+
             <div class="row">
                 <div class="input-field col s12">
                     <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Сохранить
@@ -36,6 +44,7 @@ use yii\widgets\ActiveForm;
         </div>
 
         <?php echo $form->field($model, 'id')->hiddenInput([ 'value' => $section->id ])->label(false); ?>
+        <?php echo $form->field($model, 'graph_type')->hiddenInput(['value' => $section->graph_type])->label(false); ?>
         <?php $form->end(); ?>
     </div>
 </div>

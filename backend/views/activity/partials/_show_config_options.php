@@ -19,7 +19,7 @@ use yii\helpers\Url;
 <li class="li-hover">
     <ul class="chat-collapsible" data-collapsible="expandable">
         <li>
-            <div class="collapsible-header teal white-text "><i class="mdi-communication-contacts"></i>Компании</div>
+            <div class="collapsible-header teal white-text "><i class="mdi-communication-contacts"></i>Кампании</div>
             <div class="collapsible-body recent-activity">
                 <form>
                     <?php foreach (\common\models\activity\ActivityTypeCompany::find()->all() as $company): ?>

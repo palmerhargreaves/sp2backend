@@ -27,14 +27,26 @@ extend(ActivityStatistic, BaseForm, {
 
         $(document).on("click", "#js-config-statistic-params", $.proxy(this.onShowStatisticConfig, this));
 
+        $(document).on("click", ".img-block-graph", $.proxy(this.onChangeBlockGraphType, this));
+
         new ActivityBlockForm({form: '#form-block-settings'}).start();
         new ActivityBlockForm({form: '#form-new-field-add'}).start();
+        new ActivityBlockForm({form: '#form-activity-settings'}).start();
 
         new ActivityBlockForm({
             form: '#form-new-field-formula',
             custom_fn: $.proxy(this.formulaWorkflow, this)
         }).start();
 
+    },
+
+    onChangeBlockGraphType: function (event) {
+        var element = $(event.currentTarget);
+
+        $('.img-block-graph').removeClass('active');
+        element.addClass('active');
+
+        $('input[name*=graph_type]').val(element.data('type'));
     },
 
     onShowStatisticConfig: function(event) {

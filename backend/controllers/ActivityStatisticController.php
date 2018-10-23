@@ -8,6 +8,7 @@
 
 namespace backend\controllers;
 
+use common\models\activity\Activity;
 use common\models\activity\ActivityAgreementByUser;
 use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
@@ -79,7 +80,7 @@ class ActivityStatisticController extends PageController
         return $this->renderPartial('partials/_activity_config_statistic', [
                 'activity' => $this->getActivity(),
                 'section_templates' => ActivityExtendedStatisticSectionsTemplates::getList($this->getActivity()),
-                'statistic_config_content' => $this->renderPartial('partials/_statistic-options', [ 'activity' => $this->getActivity() ])
+                'statistic_config_content' => $this->renderAjax('partials/_statistic-options', [ 'activity' => $this->getActivity(), 'activity_model' => new Activity() ])
             ]
         );
     }
@@ -92,7 +93,7 @@ class ActivityStatisticController extends PageController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return [ 'success' => ActivityExtendedStatisticSections::disableSection(),
-            'html' => $this->renderPartial('partials/_statistic-options', [ 'activity' => $this->getActivity() ]),
+            'html' => $this->renderAjax('partials/_statistic-options', [ 'activity' => $this->getActivity(), 'activity_model' => new Activity() ]),
             'block_html' => $this->renderPartial('partials/blocks/_block_item', [ 'section_template' => ActivityExtendedStatisticSectionsTemplates::getBlock(\Yii::$app->request->post('section_template_id'), $this->getActivity()) ]),
             'section_template_id' => \Yii::$app->request->post('section_template_id'),
         ];
@@ -286,6 +287,6 @@ class ActivityStatisticController extends PageController
     {
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
-        return [ 'html' => $this->renderPartial('partials/_statistic-options', [ 'activity' => $this->getActivity() ]) ];
+        return [ 'html' => $this->renderAjax('partials/_statistic-options', [ 'activity' => $this->getActivity(), 'activity_model' => new Activity() ]) ];
     }
 }
