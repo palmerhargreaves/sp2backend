@@ -15,7 +15,7 @@ class ActivityClientsBlock extends ActivityExtendedStatisticFields
             [ [ 'header', 'activity_id', 'parent_id' ], 'required' ],
             [ [ 'value_type' ], 'string' ],
             [ [ 'activity_id', 'parent_id', 'status', 'position', 'required', 'step_id' ], 'integer' ],
-            [ [ 'show_in_export' ], 'boolean' ],
+            [ [ 'show_in_export', 'show_in_statistic' ], 'boolean' ],
             [ [ 'header', 'description' ], 'string', 'max' => 255 ],
         ];
     }

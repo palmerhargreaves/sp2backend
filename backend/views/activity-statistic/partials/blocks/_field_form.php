@@ -35,6 +35,13 @@ use yii\helpers\Url;
         </div>
 
         <div class="row">
+            <div class="input-field col s12">
+                <input type="checkbox" id="show_in_statistic" name="ActivityClientsBlock[show_in_statistic]" value="1">
+                <label for="show_in_statistic" style="text-decoration: none;">Выводить в статистике</label>
+            </div>
+        </div>
+
+        <div class="row">
             <div class="row">
                 <div class="input-field col s12">
                     <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Добавить

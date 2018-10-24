@@ -12,9 +12,10 @@ use yii\helpers\Url;
 
 <div class="col s12 m12 l12">
     <div class="card section-template-block section-template-block-<?php echo $section_template['section_template']->id; ?> <?php echo $section_template['section'] && $section_template['section']->status ? "white" : ""; ?>"
-        style="<?php echo !($section_template['section'] && $section_template['section']->status) ? "background-color: #252525 !important" : ""; ?>">
+         style="<?php echo !($section_template['section'] && $section_template['section']->status) ? "background-color: #252525 !important" : ""; ?>">
         <div class="card-content">
-            <span class="card-title" style="<?php echo !($section_template['section'] && $section_template['section']->status) ? "color: white !important" : ""; ?>">
+            <span class="card-title"
+                  style="<?php echo !($section_template['section'] && $section_template['section']->status) ? "color: white !important" : ""; ?>">
                 <?php echo $section_template['section_template']->name; ?>
                 <?php if ($section_template['section'] && $section_template['section']->status): ?>
                     <i class="js-load-block-settings-and-fields mdi-action-settings tooltipped right " <?php if ($section_template['section'] && $section_template['section']->status): ?>
@@ -27,12 +28,24 @@ use yii\helpers\Url;
 
             <?php if ($section_template['section']): ?>
                 <?php
-                    $fields_count = $section_template['section']->getFieldsCount();
-                    $calc_fields_count = $section_template['section']->getCalculatedFieldsCount()
+                $fields_count = $section_template['section']->getFieldsCount();
+                $calc_fields_count = $section_template['section']->getCalculatedFieldsCount()
                 ?>
 
-                <p id="section-fields-count-<?php echo $section_template['section']->id; ?>" style="display: <?php echo $fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Полей: %d', $fields_count); ?></p>
-                <p id="section-calc-fields-count-<?php echo $section_template['section']->id; ?>"  style="display: <?php echo $calc_fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Вычисляемых полей: %d', $calc_fields_count); ?></p>
+                <div class="row">
+                    <div class="col s10">
+                        <p id="section-fields-count-<?php echo $section_template['section']->id; ?>"
+                           style="display: <?php echo $fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Полей: %d', $fields_count); ?></p>
+                        <p id="section-calc-fields-count-<?php echo $section_template['section']->id; ?>"
+                           style="display: <?php echo $calc_fields_count > 0 ? "block" : "none"; ?>"><?php echo sprintf('Вычисляемых полей: %d', $calc_fields_count); ?></p>
+                    </div>
+
+                    <div class="col s2">
+                        <?php if ($section_template['section']->graph_type != "none"): ?>
+                            <img style="width: 24px;" src="img/graphs/<?php echo $section_template['section']->getGraphTypeImg(); ?>" />
+                        <?php endif; ?>
+                    </div>
+                </div>
 
             <?php endif; ?>
         </div>

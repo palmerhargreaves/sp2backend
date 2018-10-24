@@ -16,6 +16,7 @@ use Yii;
  * @property integer $parent_id
  * @property integer $status
  * @property integer $activity_id
+ * @property string $graph_type
  */
 class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements ActivitySectionInterface
 {
@@ -43,7 +44,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
             [['header', 'parent_id', 'activity_id'], 'required'],
             [['parent_id', 'status', 'activity_id', 'position', 'section_template_id'], 'integer'],
             [['header'], 'string', 'max' => 255],
-            [['description'], 'string'],
+            [['description', 'graph_type'], 'string'],
         ];
     }
 
@@ -59,6 +60,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
             'parent_id' => 'Parent ID',
             'status' => 'Status',
             'activity_id' => 'ActivityController ID',
+            'graph_type' => 'Тип диаграммы'
         ];
     }
 
@@ -184,4 +186,12 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
         ], $this->renderFields($view));
     }
 
+    /**
+     *
+     */
+    public function getGraphTypeImg() {
+       $graph_imgs = [ 'waterfall' => 'img_funnel_sm.jpg', 'pie' => 'img_pie.jpg', 'linear' => '', 'bars' => '' ];
+
+       return array_key_exists($this->graph_type, $graph_imgs) ? $graph_imgs[$this->graph_type] : 'none.png';
+    }
 }

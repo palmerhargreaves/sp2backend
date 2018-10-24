@@ -25,26 +25,28 @@ use yii\widgets\ActiveForm;
             <div class="input-field col s12">
                 <?php echo $form->field($model, 'description')->textarea([ 'rows' => 6, 'placeholder' => 'Краткое описание блока', 'value' => $section->description ]); ?>
             </div>
+        </div>
 
+        <div class="row">
             <div class="input-field col s12">
-                <div class="row">
-                    <div class="col s1">&nbsp;</div>
-                    <div class="col s3"><img class="img-block-graph" title="" src="img/graphs/img_funnel_sm.jpg" data-type="waterfall" /></div>
-                    <div class="col s3"><img class="img-block-graph" title="" src="img/graphs/img_pie.jpg" data-type="pie" /></div>
-                </div>
+                <select name="ActivitySettingsBlock[graph_type]" class="block-selectbox">
+                    <?php foreach (array('none' => 'Без диграммы', 'waterfall' => 'Воронка', 'pie' => 'Круговая', 'linear' => 'Линейная', 'bars' => 'Гистограмма' ) as $type_key => $type_label): ?>
+                        <option value="<?php echo $type_key; ?>" <?php echo ($type_key != "none" && $section->graph_type == $type_key) ? "selected" : ""; ?>><?php echo $type_label; ?></option>
+                    <?php endforeach; ?>
+                </select>
+                <p class="help-block help-block-error"></p>
             </div>
+        </div>
 
-            <div class="row">
-                <div class="input-field col s12">
-                    <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Сохранить
-                        <i class="mdi-content-send right"></i>
-                    </button>
-                </div>
+        <div class="row">
+            <div class="input-field col s12">
+                <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Сохранить
+                    <i class="mdi-content-send right"></i>
+                </button>
             </div>
         </div>
 
         <?php echo $form->field($model, 'id')->hiddenInput([ 'value' => $section->id ])->label(false); ?>
-        <?php echo $form->field($model, 'graph_type')->hiddenInput(['value' => $section->graph_type])->label(false); ?>
         <?php $form->end(); ?>
     </div>
 </div>

@@ -13,7 +13,7 @@ class ActivitySettingsBlock extends ActivityExtendedStatisticSections
     {
         return [
             [['description'], 'required'],
-            [['description'], 'string'],
+            [['description', 'graph_type'], 'string'],
         ];
     }
 

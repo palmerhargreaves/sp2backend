@@ -53,6 +53,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             [['value_type', 'def_value', 'dealers_group'], 'string'],
             [['activity_id', 'parent_id', 'status', 'position', 'required', 'step_id', 'editable'], 'integer'],
             [['header', 'description'], 'string', 'max' => 255],
+            [['show_in_export', 'show_in_statistic'], 'boolean']
         ];
     }
 
@@ -268,6 +269,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             ]);
         } else {
             $is_new = false;
+
             //Удаляем все привязанные поля
             ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $postData['field_id']]);
 
