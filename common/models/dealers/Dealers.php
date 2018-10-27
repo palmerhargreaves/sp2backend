@@ -95,6 +95,21 @@ class Dealers extends \yii\db\ActiveRecord
             'shop_sc_id' => 'Shop Sc ID',
             'shop_password' => 'Shop Password',
             'dealer_group_id' => 'Dealer Group ID',
+            'dealer_id' => 'Номер дилера'
         ];
+    }
+
+    public function getShortNumber() {
+        return substr($this->number, -3);
+    }
+
+    public function getDealerTypeLabel() {
+        $types = array(
+            1 => 'PKW',
+            2 => 'NFZ',
+            3 => 'PKW+NFZ'
+        );
+
+        return array_key_exists($this->dealer_type, $types) ? $types[$this->dealer_type] : 'Нет';
     }
 }

@@ -10,6 +10,7 @@ use yii\helpers\Url;
 
 ?>
 
+
 <div class="card-panel">
     <h4 class="header2">Добавление нового поля</h4>
     <div class="row">
@@ -31,13 +32,13 @@ use yii\helpers\Url;
             </div>
 
             <div class="row">
-                <div class="input-field col s6">
-                    <select name="ActivityTargetBlock[dealers_group]" class="block-selectbox">
-                        <?php foreach (\common\models\activity\fields\ActivityExtendedStatisticFields::getDealersGroups() as $group_key => $dealer_group): ?>
-                            <option value="<?php echo $group_key; ?>"><?php echo $dealer_group; ?></option>
-                        <?php endforeach; ?>
-                    </select>
-                    <p class="help-block help-block-error"></p>
+                <div class="input-field col s12">
+                    <input id="js-search-by-dealer-number" type="text" data-url="<?php echo Url::to(['activity-statistic/search-dealer-by-number']); ?>" />
+                    <label for="js-search-by-dealer-number" class="">Введите номер дилера</label>
+                </div>
+
+                <div class="col s12">
+                    <div id="dealer-search-result"></div>
                 </div>
             </div>
 

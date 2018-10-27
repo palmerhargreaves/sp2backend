@@ -29,6 +29,8 @@ extend(ActivityStatistic, BaseForm, {
 
         $(document).on("click", ".img-block-graph", $.proxy(this.onChangeBlockGraphType, this));
 
+        $(document).on("input", "#js-search-by-dealer-number", $.proxy(this.onSearchDealerByNumber, this));
+
         new ActivityBlockForm({form: '#form-block-settings'}).start();
         new ActivityBlockForm({form: '#form-new-field-add'}).start();
         new ActivityBlockForm({form: '#form-activity-settings'}).start();
@@ -37,7 +39,18 @@ extend(ActivityStatistic, BaseForm, {
             form: '#form-new-field-formula',
             custom_fn: $.proxy(this.formulaWorkflow, this)
         }).start();
+    },
 
+    onSearchDealerByNumber: function(event) {
+        var element = $(event.currentTarget);
+
+        $.post(element.data('url'), {
+            dealer_number: element.val()
+        }, $.proxy(this.onDealerSearchResult, this));
+    },
+
+    onDealerSearchResult: function(data) {
+        $('#dealer-search-result').html(data.html);
     },
 
     onChangeBlockGraphType: function (event) {

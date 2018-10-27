@@ -18,6 +18,7 @@ use common\models\activity\fields\ActivityExtendedStatisticFields;
 use common\models\activity\fields\ActivityExtendedStatisticFieldsCalculated;
 use common\models\activity\fields\blocks\ActivityCalculatedFieldBlock;
 use common\models\activity\statistic\ActivitySettingsBlock;
+use common\models\dealers\Dealers;
 use Yii;
 use yii\bootstrap\ActiveForm;
 use yii\filters\AccessControl;
@@ -54,7 +55,8 @@ class ActivityStatisticController extends PageController
                             'add-new-calculated-field',
                             'edit-calculated-field',
                             'bind-activity-statistic-quarter',
-                            'show-config'
+                            'show-config',
+                            'search-dealer-by-number'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -288,5 +290,14 @@ class ActivityStatisticController extends PageController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return [ 'html' => $this->renderAjax('partials/_statistic-options', [ 'activity' => $this->getActivity(), 'activity_model' => new Activity() ]) ];
+    }
+
+    /**
+     * Поиск дилера по номеру
+     */
+    public function actionSearchDealerByNumber() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return [ 'html' => $this->renderPartial('partials/blocks/targets/_dealers_list_by_number', ['dealers_list' => Dealers::find()->where(['like', 'number', Yii::$app->request->post('dealer_number')])->all() ] )];
     }
 }

@@ -4,6 +4,7 @@ namespace common\models\activity\sections;
 
 use common\models\activity\fields\blocks\ActivityTargetBlock;
 use common\models\activity\fields\blocks\BaseBlockModel;
+use common\models\dealers\DealersSearch;
 
 /**
  * Created by PhpStorm.
@@ -47,19 +48,22 @@ class ActivitySectionTargets extends BaseBlockModel
         $model = $this->getModel();
         if ($model->load(\Yii::$app->request->post())) {
 
-            if (ActivityTargetBlock::find()->where(['activity_id' => $activity_id, 'parent_id' => $this->id, 'dealers_group' => $model->dealers_group])->count() > 0) {
-                return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля. Для выбранной группы дилеров уже создано поле.')];
+            if (ActivityTargetBlock::find()->where(['activity_id' => $activity_id, 'parent_id' => $this->id, 'dealer_id' => $model->dealer_id])->count() > 0) {
+                return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля. Для выбранного дилера уже создано поле.')];
             }
 
-            $model->editable = 0;
+            $model->editable = 1;
             $model->parent_id = $this->id;
             $model->activity_id = $activity_id;
             $model->value_type = 'dig';
+            $model->show_in_statistic = true;
             $model->status = 1;
 
             //Добавляем новое поле и получаем список всех полей привязанных к блоку
-            if ($model->save()) {
+            if ($model->validate() && $model->save()) {
                 return $this->addFieldSuccess($view);
+            } else {
+                var_dump($model->errors);
             }
         }
 
