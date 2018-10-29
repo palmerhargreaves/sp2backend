@@ -41,7 +41,7 @@ extend(ActivityStatistic, BaseForm, {
         }).start();
     },
 
-    onSearchDealerByNumber: function(event) {
+    onSearchDealerByNumber: function (event) {
         var element = $(event.currentTarget);
 
         $.post(element.data('url'), {
@@ -49,7 +49,7 @@ extend(ActivityStatistic, BaseForm, {
         }, $.proxy(this.onDealerSearchResult, this));
     },
 
-    onDealerSearchResult: function(data) {
+    onDealerSearchResult: function (data) {
         $('#dealer-search-result').html(data.html);
     },
 
@@ -62,7 +62,7 @@ extend(ActivityStatistic, BaseForm, {
         $('input[name*=graph_type]').val(element.data('type'));
     },
 
-    onShowStatisticConfig: function(event) {
+    onShowStatisticConfig: function (event) {
         var element = $(event.currentTarget);
 
         this.showHideConfigBtn(false);
@@ -72,14 +72,14 @@ extend(ActivityStatistic, BaseForm, {
         }, $.proxy(this.onShowConfigResult, this));
     },
 
-    onShowConfigResult: function(result) {
+    onShowConfigResult: function (result) {
         this.getContentContainer().html(result.html);
     },
 
-    onChangeActivityStatisticQuarter: function(event) {
+    onChangeActivityStatisticQuarter: function (event) {
         var element = $(event.currentTarget), quarters = [];
 
-        $('.js-activity-statistic-quarter').each(function(ind, el) {
+        $('.js-activity-statistic-quarter').each(function (ind, el) {
             if ($(el).is(':checked')) {
                 quarters.push($(el).data('quarter'));
             }
@@ -92,14 +92,14 @@ extend(ActivityStatistic, BaseForm, {
         }, $.proxy(this.onBindActivityQuarterResult, this));
     },
 
-    onBindActivityQuarterResult: function(result) {
+    onBindActivityQuarterResult: function (result) {
         result.success ? Materialize.toast("Данные успешно сохранены.", 2500) : Materialize.toast("Ошибка сохранения данных.", 2500);
     },
 
-    onChangeActivityParams: function(event) {
+    onChangeActivityParams: function (event) {
         var element = $(event.currentTarget), fields = [];
 
-        $(".form-config-field-" + getElementData(element, "id")).each(function(ind, el) {
+        $(".form-config-field-" + getElementData(element, "id")).each(function (ind, el) {
             if ($(el).hasClass("checkbox")) {
                 fields.push({
                     field: $(el).data("field"),
@@ -111,7 +111,7 @@ extend(ActivityStatistic, BaseForm, {
         $.post(getElementData(element, "url"), {
             activity: getElementData(element, "id"),
             fields: fields
-        }, function(result) {
+        }, function (result) {
             result.success ? Materialize.toast("Данные успешно сохранены.", 2500) : Materialize.toast("Ошибка сохранения данных.", 2500);
         });
     },
@@ -307,7 +307,7 @@ extend(ActivityStatistic, BaseForm, {
         $(document).on("click", ".js-btn-edit-field", $.proxy(this.onEditCalculatedField, this));
     },
 
-    onEditCalculatedField: function(event) {
+    onEditCalculatedField: function (event) {
         var element = $(event.currentTarget);
 
         $.post(element.data('url'), {
@@ -316,7 +316,7 @@ extend(ActivityStatistic, BaseForm, {
         }, $.proxy(this.onEditCalculatedFieldResult, this));
     },
 
-    onEditCalculatedFieldResult: function(result) {
+    onEditCalculatedFieldResult: function (result) {
         if (result.success) {
             $('#container-calculated-field').html(result.html);
 
@@ -330,7 +330,7 @@ extend(ActivityStatistic, BaseForm, {
         }
     },
 
-    onCheckUncheckFieldAndFormula: function(event) {
+    onCheckUncheckFieldAndFormula: function (event) {
         var checked_calc_fields = this.getCalcCheckedFields(), element = $(event.currentTarget);
 
         if (element.is(":checked")) {
@@ -344,7 +344,7 @@ extend(ActivityStatistic, BaseForm, {
             : checked_calc_fields.length >= 2 ? $("#js-save-calc-value").fadeIn() : $("#js-save-calc-value").fadeOut();
     },
 
-    onChangeCalcType: function(event) {
+    onChangeCalcType: function (event) {
         var checked_calc_fields = this.getCalcCheckedFields(), element = $(event.currentTarget);
 
         element.val() == 'percent' && checked_calc_fields.length >= 1
@@ -352,13 +352,13 @@ extend(ActivityStatistic, BaseForm, {
             : checked_calc_fields.length >= 2 ? $("#js-save-calc-value").fadeIn() : $("#js-save-calc-value").fadeOut();
     },
 
-    onAddNewFormula: function(event) {
+    onAddNewFormula: function (event) {
         event.preventDefault();
 
         var element = $(event.currentTarget), self = this, field_header = $.trim($('#calculated_field_header').val());
 
         var items = [];
-        $("#checked-calc-field .dd-item").each(function(ind, item) {
+        $("#checked-calc-field .dd-item").each(function (ind, item) {
             items.push({
                 id: $(item).data("id")
             });
@@ -382,7 +382,7 @@ extend(ActivityStatistic, BaseForm, {
             calc_type: $("#field-calc-type").val(),
             show_in_export: $('#show_in_export_calc').is(':checked') ? 1 : 0,
             show_in_statistic: $('#show_in_statistic_calc').is(':checked') ? 1 : 0,
-        }, function(result) {
+        }, function (result) {
             if (result.html_fields != undefined) {
                 $(result.html_fields.html_container).html(result.html_fields.html);
             }
@@ -394,7 +394,7 @@ extend(ActivityStatistic, BaseForm, {
         });
     },
 
-    onDeleteFormulaField: function(event) {
+    onDeleteFormulaField: function (event) {
         var element = $(event.currentTarget);
 
         if (confirm('Удалить формулу ?')) {
@@ -419,11 +419,11 @@ extend(ActivityStatistic, BaseForm, {
         return calc_checked_fields;
     },
 
-    getFieldCalcType: function() {
+    getFieldCalcType: function () {
         return $('#field-calc-type');
     },
 
-    showHideConfigBtn: function(show) {
+    showHideConfigBtn: function (show) {
         show ? $('#js-config-statistic-params').fadeIn() : $('#js-config-statistic-params').fadeOut();
     }
 });

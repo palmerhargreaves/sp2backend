@@ -7,6 +7,7 @@ use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
 use common\models\activity\fields\traits\ActivityFieldCalcFieldsTrait;
 use common\models\activity\fields\traits\ActivityFieldsTrait;
 use Yii;
+use common\models\dealers\Dealers;
 
 /**
  * This is the model class for table "activity_extended_statistic_fields".
@@ -50,7 +51,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     {
         return [
             [['header', 'activity_id'], 'required'],
-            [['value_type', 'def_value', 'dealers_group'], 'string'],
+            [['value_type', 'def_value', 'dealers_group', 'custom_name'], 'string'],
             [['activity_id', 'parent_id', 'status', 'position', 'required', 'step_id', 'editable'], 'integer'],
             [['header', 'description'], 'string', 'max' => 255],
             [['show_in_export', 'show_in_statistic'], 'boolean']
@@ -74,7 +75,8 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             'required' => 'Обязательное',
             'def_value' => 'Значение по умолчанию',
             'editable' => 'Редактируемое поле',
-            'dealers_group' => 'Группа дилеров'
+            'dealers_group' => 'Группа дилеров',
+            'dealer_id' => 'Номер дилера'
         ];
     }
 
@@ -88,6 +90,10 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             'file' => Yii::t('app', 'Файл'),
             'money' => Yii::t('app', 'Деньги'),
         ];
+    }
+
+    public function getDealer() {
+        return $this->hasOne(Dealers::className(), ['id' => 'dealer_id']);
     }
 
     /**
@@ -173,7 +179,11 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
 
         $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
         foreach ($calc_fields as $calc_field) {
-            $result[] = sprintf('[%s] %s', $calc_field->getCalcFieldSectionName(), $calc_field->getCalcFieldName());
+            if (!empty($calc_field->custom_name)) {
+                $result[] = sprintf('[Кастомные функции] %s', self::getCustomFunctionsList()[$calc_field->custom_name]);
+            } else {
+                $result[] = sprintf('[%s] %s', $calc_field->getCalcFieldSectionName(), $calc_field->getCalcFieldName());
+            }
 
             $symbol = $calc_field->calc_type;
         }
@@ -190,7 +200,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
 
         $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
         foreach ($calc_fields as $calc_field) {
-            $result[] = $calc_field->calc_field;
+            $result[] = $calc_field->calc_field != 0 ? $calc_field->calc_field : $calc_field->custom_name;
         }
 
         return $result;
@@ -233,7 +243,12 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
 
             $new_calc_field->parent_field = $field->id;
-            $new_calc_field->calc_field = $calc_field_item['id'];
+            if (isset($calc_field_item['id'])) {
+                $new_calc_field->calc_field = $calc_field_item['id'];
+            } else {
+                $new_calc_field->custom_name = $calc_field_item['custom_name'];
+            }
+
             $new_calc_field->calc_type = $postData['calc_type'];
             $new_calc_field->activity_id = $field->activity_id;
 
@@ -287,7 +302,13 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
                 $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
 
                 $new_calc_field->parent_field = $field->id;
-                $new_calc_field->calc_field = $calc_field_item['id'];
+
+                if (is_numeric($calc_field_item['id'])) {
+                    $new_calc_field->calc_field = $calc_field_item['id'];
+                } else {
+                    $new_calc_field->custom_name = $calc_field_item['id'];
+                }
+
                 $new_calc_field->calc_type = $postData['calc_type'];
                 $new_calc_field->activity_id = $field->activity_id;
 
@@ -344,9 +365,10 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     public static function deleteField($fieldId)
     {
         //Если поле участвует в формуле как параметр
-        if (ActivityExtendedStatisticFieldsCalculated::find()->where(['calc_field' => $fieldId])->count() > 0) {
-            return ['success' => false, 'message' => Yii::t('app', 'Поле привязано к формуле')];
-        }
+        /*$calculated_field = ActivityExtendedStatisticFieldsCalculated::find()->where(['calc_field' => $fieldId]);
+        if ($calculated_field) {
+            return ['success' => false, 'message' => Yii::t('app', 'Поле привязано к формуле.')];
+        }*/
 
         //Если поле является формулой, удаляем все привязки полей к формуле
         if (ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $fieldId])->count() > 0) {
@@ -361,4 +383,15 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
 
         return ['success' => $result, 'message' => $result ? Yii::t('app', 'Поле успешно удалено') : Yii::t('app', 'Ошибка удаления поля') ];
     }
+
+    /**
+     * Получить список кастомных функций
+     */
+    public static function getCustomFunctionsList() {
+        return [
+            'custom_function_activity_models_total_cash' => 'Сумма заявок',
+            'custom_function_activity_models_count' => 'Общее количество заявок'
+        ];
+    }
+
 }

@@ -63,10 +63,15 @@ class ActivitySectionTargets extends BaseBlockModel
             if ($model->validate() && $model->save()) {
                 return $this->addFieldSuccess($view);
             } else {
-                var_dump($model->errors);
+                $errors = array();
+                foreach($model->errors as $field_id => $errors_items) {
+                    foreach ($errors_items as $error) {
+                        $errors[] = $error;
+                    }
+                }
             }
         }
 
-        return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.')];
+        return ['success' => false, 'message' => \Yii::t('app', 'Ошибка добавления нового поля.</br>' . implode('<br/>', $errors))];
     }
 }

@@ -25,7 +25,7 @@
                     <tr class="sortable-list-items"
                         data-id="<?php echo $dealer->id; ?>">
                         <td >
-                            <input id="dealer_number_<?php echo $dealer->id; ?>" type="radio" name="ActivityTargetBlock[dealer_number]" value="<?php echo $dealer->id; ?>">
+                            <input id="dealer_number_<?php echo $dealer->id; ?>" type="radio" name="ActivityTargetBlock[dealer_id]" value="<?php echo $dealer->id; ?>">
                             <label for="dealer_number_<?php echo $dealer->id; ?>"><?php echo $dealer->getShortNumber(); ?></label>
                             <p class="help-block help-block-error"></p>
                         </td>

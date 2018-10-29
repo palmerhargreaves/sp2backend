@@ -193,7 +193,7 @@ class ActivityStatisticController extends PageController
             } else if (!$delete_result['success']) {
                 return [
                     'success' => false,
-                    'messages' => $delete_result['message']
+                    'message' => $delete_result['message']
                 ];
             }
         }

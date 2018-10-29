@@ -13,6 +13,9 @@ use common\models\activity\fields\blocks\BaseBlockModel;
  */
 
 class ActivitySectionEffectivenessOfTheAction extends BaseBlockModel {
+    /*protected $_block_template = 'partials/blocks/_effectiveness_of_the_action';
+    protected $_block_fields_templates = 'partials/blocks/_effectiveness_of_the_action_fields_list.php';*/
+
     public function beforeSave($insert)
     {
         $this->header = is_null($this->header) ? 'Результативность акции' : $this->header;

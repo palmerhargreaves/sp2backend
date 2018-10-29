@@ -4,6 +4,7 @@ namespace common\models\activity\fields\blocks;
 
 use common\models\activity\fields\ActivityExtendedStatisticFields;
 
+
 class ActivityTargetBlock extends ActivityExtendedStatisticFields
 {
     /**
@@ -19,5 +20,6 @@ class ActivityTargetBlock extends ActivityExtendedStatisticFields
             [ [ 'show_in_statistic' ], 'boolean' ]
         ];
     }
+
 
 }

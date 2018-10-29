@@ -6,7 +6,9 @@
  * Time: 11:38
  */
 
+use common\models\activity\ActivityExtendedStatisticSections;
 use common\models\activity\fields\ActivityExtendedStatisticFields;
+use common\models\activity\fields\ActivityExtendedStatisticFieldsCalculated;
 use yii\helpers\Url;
 
 ?>
@@ -24,7 +26,7 @@ use yii\helpers\Url;
                     <th style="width: 50px;"></th>
                     <th>Название</th>
                     <th>Значение</th>
-                    <th>Группа</th>
+                    <th>Дилер</th>
                     <th>Действие</th>
                 </tr>
                 </thead>
@@ -38,6 +40,20 @@ use yii\helpers\Url;
                         <td style="width: 35%;">
                             <input class="field-item" data-field="header" type="text"
                                    value="<?php echo $field->header; ?>"/>
+
+                            <?php
+                            //Если вычисляемое поле выводим секцию и поле к которому поле привязано
+                            if (ActivityExtendedStatisticFieldsCalculated::find()->where(['calc_field' => $field->id])->count()) {
+                                $parent_field = ActivityExtendedStatisticFields::find(['id' => $field->parent_id])->one();
+                                if ($parent_field) {
+                                    $section = ActivityExtendedStatisticSections::find(['id' => $parent_field->parent_id])->one();
+
+                                    if ($section) {
+                                        echo sprintf('[%s]: %s', $section->header, $parent_field->header);
+                                    }
+                                }
+                            }
+                            ?>
                         </td>
                         <td>
                             <input class="field-item" data-field="def_value"
@@ -51,7 +67,7 @@ use yii\helpers\Url;
                                    value="<?php echo $field->editable; ?>"/>
                         </td>
                         <td>
-                            <?php echo ActivityExtendedStatisticFields::getDealersGroups()[$field->dealers_group]; ?>
+                            <?php echo $field->dealer ? $field->dealer->name : ''; ?>
                         </td>
                         <td>
                             <div class="row">
