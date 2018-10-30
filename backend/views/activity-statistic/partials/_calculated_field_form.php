@@ -136,7 +136,7 @@ use yii\widgets\ActiveForm;
         </ul>
     </div>
 
-    <?php $calc_fields = ActivityExtendedStatisticFields::find()->where(['parent_id' => $section->id])->andWhere(['=', 'value_type', ActivityExtendedStatisticFields::CALC])->all(); ?>
+    <?php $calc_fields = ActivityExtendedStatisticFields::find()->where(['parent_id' => $section->id])->andWhere(['=', 'value_type', ActivityExtendedStatisticFields::CALC])->orderBy(['id' => SORT_ASC])->all(); ?>
     <?php if ($calc_fields): ?>
         <div class="row">
             <h4 class="header2">Список вычисляемых полей</h4>
@@ -172,9 +172,13 @@ use yii\widgets\ActiveForm;
             <div class="dd" id="checked-calc-field">
                 <?php if (isset($field)): ?>
                     <?php foreach ($field->getCalcFields() as $calc_field): ?>
-                        <li class='dd-item' data-id='<?php echo $calc_field->calc_field; ?>'>
+                        <li class='dd-item' data-id='<?php echo !empty($calc_field->custom_name) ? $calc_field->custom_name : $calc_field->calc_field; ?>'>
                             <div class='dd-handle'>
-                                <?php echo sprintf('[%s] %s', $calc_field->getCalcFieldSectionName(), $calc_field->getCalcFieldName()); ?>
+                                <?php
+                                echo !empty($calc_field->custom_name)
+                                    ? sprintf('[Кастомные функции] %s', ActivityExtendedStatisticFields::getCustomFunctionsList()[$calc_field->custom_name])
+                                    : sprintf('[%s] %s', $calc_field->getCalcFieldSectionName(), $calc_field->getCalcFieldName());
+                                ?>
                             </div>
                         </li>
                     <?php endforeach; ?>

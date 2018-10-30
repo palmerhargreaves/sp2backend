@@ -177,7 +177,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
         $result = [];
         $symbol = '';
 
-        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
+        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->orderBy(['id' => SORT_ASC])->all();
         foreach ($calc_fields as $calc_field) {
             if (!empty($calc_field->custom_name)) {
                 $result[] = sprintf('[Кастомные функции] %s', self::getCustomFunctionsList()[$calc_field->custom_name]);
