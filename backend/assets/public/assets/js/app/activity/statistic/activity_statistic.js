@@ -39,6 +39,7 @@ extend(ActivityStatistic, BaseForm, {
             form: '#form-new-field-formula',
             custom_fn: $.proxy(this.formulaWorkflow, this)
         }).start();
+
     },
 
     onSearchDealerByNumber: function (event) {

@@ -71,6 +71,7 @@ class ActivityExtendedStatisticSections extends \yii\db\ActiveRecord implements 
         $position = 1;
         foreach ($sections as $section) {
             $section_item = ActivityExtendedStatisticSections::find()->where([ 'id' => $section, 'activity_id' => $activity_id ])->one();
+
             if ($section_item) {
                 $section_item->position = $position;
                 $section_item->save(false);

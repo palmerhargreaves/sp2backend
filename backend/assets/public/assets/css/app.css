@@ -20,3 +20,7 @@
 .active {
     opacity: 1;
 }
+
+table.blocks-rows tr td {
+    padding: 0px;
+}

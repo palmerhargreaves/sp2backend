@@ -66,7 +66,7 @@ use yii\helpers\Url;
                     </a>
                 </div>
                 <div class="col s2">
-                    <?php if ($section_template['section']->graph_type != "none"): ?>
+                    <?php if ($section_template['section'] && $section_template['section']->graph_type != "none"): ?>
                         <img style="width: 24px;" src="img/graphs/<?php echo $section_template['section']->getGraphTypeImg(); ?>" />
                     <?php endif; ?>
                 </div>

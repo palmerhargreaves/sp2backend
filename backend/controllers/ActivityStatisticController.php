@@ -56,7 +56,8 @@ class ActivityStatisticController extends PageController
                             'edit-calculated-field',
                             'bind-activity-statistic-quarter',
                             'show-config',
-                            'search-dealer-by-number'
+                            'search-dealer-by-number',
+                            'sort-blocks'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -299,5 +300,11 @@ class ActivityStatisticController extends PageController
         \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
 
         return [ 'html' => $this->renderPartial('partials/blocks/targets/_dealers_list_by_number', ['dealers_list' => Dealers::find()->where(['like', 'number', Yii::$app->request->post('dealer_number')])->all() ] )];
+    }
+
+    public function actionSortBlocks() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        return [ 'success' => ActivityExtendedStatisticSections::makeSort() ];
     }
 }

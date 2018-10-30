@@ -452,6 +452,25 @@ use yii\widgets\Pjax;
             id: getElementData(element, "activity-id")
         }, function(result) {
             $("#" + element.data("content-container") + " .model-email-content").html(result);
+            
+             var dragger = tableDragger(document.querySelector(".blocks-rows"), {
+                    mode: "row",
+                });
+
+                dragger.on("drop", function (from, to, el) {
+                    var table = $(el), blocks = [];
+
+                    table.find("tbody > tr").each(function (ind, item) {
+                        blocks.push($(item).data("id"));
+                    });
+
+                    $.post(table.data("url"), {
+                        sections: blocks,
+                        activity: table.data("activity-id"),
+                    }, function (result) {
+                        Materialize.toast("Сортировка выполнена успешно.", 2500);
+                    });
+                });
         });
     });
     
