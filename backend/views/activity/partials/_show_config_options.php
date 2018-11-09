@@ -23,7 +23,7 @@ use yii\helpers\Url;
             <div class="collapsible-body recent-activity">
                 <form>
                     <?php foreach (\common\models\activity\ActivityTypeCompany::find()->all() as $company): ?>
-                        <?php $company_type_image = ActivityTypeCompanyImages::find()->where(['company_type_id' => $company->id])->one(); ?>
+                        <?php $company_type_image = ActivityTypeCompanyImages::find()->where(['company_type_id' => $company->id, 'activity_id' => $activity->id])->one(); ?>
                         <div class="chat-out-list row">
                             <div class="col s9">
                                 <input name="company-group" type="radio" id="company-<?php echo $company->id; ?>" <?php echo $company->id == $activity->type_company_id ? "checked" : ""; ?>>
