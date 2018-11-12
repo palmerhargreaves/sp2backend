@@ -456,7 +456,7 @@ use yii\widgets\Pjax;
              var dragger = tableDragger(document.querySelector(".blocks-rows"), {
                     mode: "row",
                 });
-
+                
                 dragger.on("drop", function (from, to, el) {
                     var table = $(el), blocks = [];
 
