@@ -59,7 +59,7 @@ class ActivityExtendedStatisticSectionsTemplates extends \yii\db\ActiveRecord
             $cls_name = self::getSectionTemplateCls($section_template);
 
             $section = $cls_name::getSection($activity, $section_template->id);
-            $sections_ordered_list[$section ? ($section->position != 0 ? $section->position : 999) : $position++][] = [ 'section_template' => $section_template, 'activity' => $activity, 'section' => $section ];
+            $sections_ordered_list[$section ? ($section->position != 0 ? $section->position : $position++) : $position++][] = [ 'section_template' => $section_template, 'activity' => $activity, 'section' => $section ];
         }
 
         ksort($sections_ordered_list);
