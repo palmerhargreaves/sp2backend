@@ -6,6 +6,7 @@
  * Time: 21:04
  */
 
+use common\models\activity\ActivityTypeCompanyImages;
 use common\models\user\User;
 use yii\helpers\Url;
 
@@ -18,14 +19,29 @@ use yii\helpers\Url;
 <li class="li-hover">
     <ul class="chat-collapsible" data-collapsible="expandable">
         <li>
-            <div class="collapsible-header teal white-text "><i class="mdi-communication-contacts"></i>Компании</div>
+            <div class="collapsible-header teal white-text "><i class="mdi-communication-contacts"></i>Кампании</div>
             <div class="collapsible-body recent-activity">
                 <form>
                     <?php foreach (\common\models\activity\ActivityTypeCompany::find()->all() as $company): ?>
+                        <?php $company_type_image = ActivityTypeCompanyImages::find()->where(['company_type_id' => $company->id, 'activity_id' => $activity->id])->one(); ?>
                         <div class="chat-out-list row">
-                            <div class="col s12">
+                            <div class="col s9">
                                 <input name="company-group" type="radio" id="company-<?php echo $company->id; ?>" <?php echo $company->id == $activity->type_company_id ? "checked" : ""; ?>>
                                 <label style="font-weight: normal; color: black;" for="company-<?php echo $company->id; ?>"><?php echo $company->name; ?></label>
+
+                                <?php if ($company_type_image): ?>
+                                    <img style="max-width: 100px;" src="<?php echo Yii::$app->params['images_container_url']; ?>company_types/<?php echo $company_type_image->path; ?>" />
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="col s2">
+                                <a href="#modal-activity-company-image" style="height: 2px;" class="modal-trigger js-show-activity-company-type-upload-image"
+                                   data-position="left"
+                                   data-delay="50"
+                                   data-activity-id="<?php echo $activity->id; ?>"
+                                   data-company-id="<?php echo $company->id; ?>"
+                                   data-company-type-image-id="<?php echo !is_null($company_type_image) ? $company_type_image->id : 0; ?>"
+                                   data-tooltip="<?php echo Yii::t('app', 'Параметры компании'); ?>"><i class="mdi-action-settings"></i></a>
                             </div>
 
                         </div>

@@ -14,15 +14,16 @@ use common\models\activity\ActivityAgreementByUser;
 use common\models\activity\ActivitySearch;
 use common\models\activity\ActivitySpecialAgreementUsersList;
 use common\models\activity\ActivitySpecialists;
-use common\models\activity\ActivityStatisticPreCheck;
 use common\models\activity\ActivityStatisticPreCheckSearch;
 use common\models\activity\ActivityStatisticPreCheckUsers;
+use common\models\activity\ActivityTypeCompanyImages;
 use common\models\activity\utils\ActivitiesStatistics;
 use common\models\logs\Log;
 use richardfan\sortable\SortableAction;
 use Yii;
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
+use yii\helpers\Url;
 
 class ActivityController extends PageController
 {
@@ -62,7 +63,15 @@ class ActivityController extends PageController
                             'config-agreement-by-user',
                             'allow-deny-special-agreement',
                             'allow-deny-agreement-by-user',
-                            'agreement-by-importer-user'
+                            'agreement-by-importer-user',
+                            'show-statistic-config',
+                            'activity-statistic-disable-block',
+                            'activity-statistic-activate-block',
+                            'load-block-data',
+                            'add-block-field',
+                            'validate-block-data',
+                            'upload-activity-company-type-image',
+                            'settings'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -105,7 +114,9 @@ class ActivityController extends PageController
         $activitySearch = new ActivitySearch();
         $dataProvider = $activitySearch->search(Yii::$app->request->queryParams);
 
-        return $this->render('index', [ 'searchProvider' => $activitySearch, 'dataProvider' => $dataProvider ]);
+        $activity_company_type_image_model = new ActivityTypeCompanyImages();
+
+        return $this->render('index', [ 'searchProvider' => $activitySearch, 'dataProvider' => $dataProvider, 'activity_company_type_image_model' => $activity_company_type_image_model ]);
     }
 
     public function actionShowConfigOptions ()
@@ -304,5 +315,54 @@ class ActivityController extends PageController
         }
 
         return [ 'success' => true ];
+    }
+
+    /**
+     * Загрузка изоюражния для компании активности
+     */
+    public function actionUploadActivityCompanyTypeImage() {
+
+        if (Yii::$app->request->isPost) {
+            $id = Yii::$app->request->post('ActivityTypeCompanyImages')['id'];
+
+            $activity_company_type_image_model = ActivityTypeCompanyImages::findOne(['id' => $id]);
+            if (is_null($activity_company_type_image_model)) {
+                $activity_company_type_image_model = new ActivityTypeCompanyImages();
+            }
+
+            if ($activity_company_type_image_model->load(Yii::$app->request->post()) && $activity_company_type_image_model->validate()) {
+
+                if (!$activity_company_type_image_model->upload()) {
+                    Yii::$app->session->setFlash('error', Yii::t('app', 'Ошибка сохранения!'));
+
+                    return $this->redirect(Url::to([ 'list' ]));
+                }
+
+                Yii::$app->session->setFlash('success', Yii::t('app', 'Изображение успешно сохранено!'));
+
+                return $this->redirect(Url::to([ 'list' ]));
+            } else {
+
+                Yii::$app->session->setFlash('error', Yii::t('app', 'Ошибка сохранения!'));
+            }
+        }
+
+        return $this->redirect(Url::to([ 'list' ]));
+    }
+
+    public function actionSettings() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        if (Yii::$app->request->isPost) {
+            $activity = Activity::findOne(['id' => Yii::$app->request->post('id')]);
+
+            if ($activity->load(Yii::$app->request->post())) {
+                $activity->save(false);
+
+                return [ 'success' => true, 'message' => Yii::t('app', 'Параметры успешно сохранены.') ];
+            }
+        }
+
+        return [ 'success' => false ];
     }
 }

@@ -84,12 +84,19 @@ trait ActivityStatisticTrait
     public static function saveStatisticConfig() {
         $activity_statistic = ActivityVideoRecordsStatistics::find()->where(['activity_id' => \Yii::$app->request->post('activity')])->one();
 
+        if (!$activity_statistic) {
+            $activity_statistic = new ActivityVideoRecordsStatistics();
+            $activity_statistic->header = sprintf('Статистика по активности (%d)', \Yii::$app->request->post('activity'));
+            $activity_statistic->activity_id = \Yii::$app->request->post('activity');
+        }
+
         if ($activity_statistic) {
             $fields = \Yii::$app->request->post('fields');
 
             foreach ($fields as $field) {
                 $activity_statistic->{$field['field']} = $field['val'];
             }
+            $activity_statistic->last_updated_at = date('Y-m-d H:i:s');
             $activity_statistic->save(false);
 
             return [ "success" => true ];

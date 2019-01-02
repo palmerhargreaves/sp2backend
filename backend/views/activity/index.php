@@ -218,6 +218,7 @@ use yii\widgets\Pjax;
                                     'attribute' => Yii::t('app', 'Действия'),
                                     'value' => function ($model) {
                                         return '
+                                            <a href="#modal-config-statistic-by-blocks" data-url="'.Url::to(['/activity-statistic/show-statistic-config', 'id' => $model->id]).'" data-content-container="modal-config-statistic-by-blocks" class="modal-trigger js-show-statistic-config btn-floating waves-effect waves-light green tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация параметров статистики') . '"><i class="mdi-action-assessment"></i></a>
                                             <a href="#!" data-url="'.Url::to(['/activity/show-config-options', 'id' => $model->id]).'" class="js-show-config btn-floating waves-effect waves-light grey tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Конфигурация') . '"><i class="mdi-action-settings"></i></a>
                                             <a href="' . Url::to(['/activity/info', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light blue tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Редактировать') . '"><i class="mdi-editor-mode-edit"></i></a>
                                             <a href="' . Url::to(['/activity/delete', 'id' => $model->id]) . '" class="btn-floating waves-effect waves-light red tooltipped" data-position="top" data-delay="50" data-tooltip="' . Yii::t('app', 'Удалить') . '"><i class="mdi-content-clear"></i></a>';
@@ -252,9 +253,77 @@ use yii\widgets\Pjax;
 
         </div>
     </div>
+
+    <div id="modal-config-agreement-by-user" class="modal">
+        <div class="model-email-content" style="padding-top: 0px;">
+
+        </div>
+    </div>
+
+    <div id="modal-config-statistic-by-blocks" class="modal modal-window bottom-sheet" style="min-height: 80%; max-height: 99%;">
+        <div class="modal-content model-email-content modal-config-statistic-content">
+
+        </div>
+    </div>
+
+    <div id="modal-activity-company-image" class="modal">
+        <?php $form = ActiveForm::begin([
+            'id' => 'form-activity-company-image',
+            'action' => Url::to(['activity/upload-activity-company-type-image']),
+            'fieldConfig' => [
+            'template' => '{input}{error}'
+        ], 'options' => [ 'class' => 'col s12', 'enctype' => 'multipart/form-data' ] ]); ?>
+
+        <div class="modal-content">
+            <nav class="red">
+                <div class="nav-wrapper">
+                    <div class="left col s12 m12 l12">
+                        <h4 style="margin-top: 10px; margin-left: 20px;"><?php echo Yii::t('app', 'Добавить изображение'); ?></h4>
+                    </div>
+                </div>
+            </nav>
+        </div>
+
+        <div class="model-email-content" style="padding-top: 0px;">
+            
+
+            <div class="row">
+                <div class="file-field input-field">
+                    <div class="btn">
+                        <span>Файл</span>
+                        <?php echo $form->field($activity_company_type_image_model, 'path')->fileInput([ 'class' => 'file btn-primary', 'multiple' => false ]); ?>
+                    </div>
+                    <div class="file-path-wrapper">
+                        <input class="file-path validate" type="text" placeholder="Загрузите файл">
+                    </div>
+                </div>
+            </div>
+
+            <?php echo $form->field($activity_company_type_image_model, 'activity_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+            <?php echo $form->field($activity_company_type_image_model, 'company_type_id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+            <?php echo $form->field($activity_company_type_image_model, 'id')->hiddenInput([ 'value' => 0 ])->label(false); ?>
+
+            <div class="row">
+                <div class="input-field col s12">
+                    <button type="submit" class="btn cyan waves-effect waves-light right">
+                        <i class="mdi-content-save right"></i>&nbsp;<?= Yii::t('app', 'Добавить') ?>
+                    </button>
+                </div>
+            </div>
+
+
+        </div>
+        <?php ActiveForm::end(); ?>
+    </div>
 </div>
 
 <?php $this->registerJs('
+    window.activity_statistic = new ActivityStatistic({
+        
+    }).start();
+    
+    window.activity_company_type_image = new ActivityCompanyTypeImage({}).start();
+    
     $(".activity-active").each(function(index, item) {
         $(item).sparkline($(item).data("items").split(":"), {
             type: \'bar\',
@@ -286,7 +355,7 @@ use yii\widgets\Pjax;
     });
     
     $(document).on("click", ".js-show-config", function(e) {
-        var element = $(e.target);
+        var element = $(e.currentTarget);
          
         $("#chat-out").html("");
         $(".chat-collapse").trigger("click");
@@ -306,7 +375,7 @@ use yii\widgets\Pjax;
                     delay: 50
                 });
             
-                $(\'.modal-trigger\').leanModal({
+               $(\'.modal-trigger\').leanModal({
                     dismissible: true, // Modal can be dismissed by clicking outside of the modal
                     opacity: .5, // Opacity of modal background
                     in_duration: 300, // Transition in duration
@@ -317,7 +386,7 @@ use yii\widgets\Pjax;
                     complete: function() { 
                     //alert(\'Closed\'); 
                     } // Callback for Modal close
-                });
+               });
             });
         }, 200);
     });
@@ -376,13 +445,32 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal", function(event) {
+    $(document).on("click", ".js-show-statistic-config-modal, .js-show-special-agreement-config-modal, .js-show-agreement-by-user-config-modal, .js-show-statistic-config", function(event) {
         var element = $(event.currentTarget);
         
         $.post(getElementData(element, "url"), {
             id: getElementData(element, "activity-id")
         }, function(result) {
             $("#" + element.data("content-container") + " .model-email-content").html(result);
+            
+             var dragger = tableDragger(document.querySelector(".blocks-rows"), {
+                    mode: "row",
+                });
+                
+                dragger.on("drop", function (from, to, el) {
+                    var table = $(el), blocks = [];
+
+                    table.find("tbody > tr").each(function (ind, item) {
+                        blocks.push($(item).data("id"));
+                    });
+
+                    $.post(table.data("url"), {
+                        sections: blocks,
+                        activity: table.data("activity-id"),
+                    }, function (result) {
+                        Materialize.toast("Сортировка выполнена успешно.", 2500);
+                    });
+                });
         });
     });
     
@@ -408,7 +496,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("change", ".js-pre-check-user-item, .js-special-agreement-user-item", function(event) {
+    $(document).on("change", ".js-pre-check-user-item, .js-special-agreement-user-item, .js-agreement-by-user-item", function(event) {
         var element = $(event.currentTarget);
         
         $.post(element.closest("table").data("url"), {
@@ -419,7 +507,7 @@ use yii\widgets\Pjax;
         });
     });
     
-    $(document).on("click", "#activity-special-agreement", function(event) {
+    $(document).on("click", "#activity-special-agreement, #activity-agreement-by-user", function(event) {
         var element = $(event.currentTarget);
         
         $.post(element.data("url"), {

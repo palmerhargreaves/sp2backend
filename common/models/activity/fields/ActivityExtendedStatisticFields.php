@@ -2,10 +2,12 @@
 
 namespace common\models\activity\fields;
 
-use common\models\activity\ActivityExtendedStatisticFieldsData;
+use common\models\activity\ActivityExtendedStatisticSections;
+use common\models\activity\ActivityExtendedStatisticSectionsTemplates;
 use common\models\activity\fields\traits\ActivityFieldCalcFieldsTrait;
 use common\models\activity\fields\traits\ActivityFieldsTrait;
 use Yii;
+use common\models\dealers\Dealers;
 
 /**
  * This is the model class for table "activity_extended_statistic_fields".
@@ -19,6 +21,10 @@ use Yii;
  * @property string $description
  * @property integer $position
  * @property integer $required
+ * @property array $calcFieldsIds
+ * @property mixed $calcFields
+ * @property mixed $calcType
+ * @property string $calcFieldsList
  * @property integer $step_id
  */
 class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
@@ -33,7 +39,7 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public static function tableName ()
+    public static function tableName()
     {
         return 'activity_extended_statistic_fields';
     }
@@ -41,20 +47,21 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     /**
      * @inheritdoc
      */
-    public function rules ()
+    public function rules()
     {
         return [
-            [ [ 'header', 'activity_id' ], 'required' ],
-            [ [ 'value_type' ], 'string' ],
-            [ [ 'activity_id', 'parent_id', 'status', 'position', 'required', 'step_id' ], 'integer' ],
-            [ [ 'header', 'description' ], 'string', 'max' => 255 ],
+            [['header', 'activity_id'], 'required'],
+            [['value_type', 'def_value', 'dealers_group', 'custom_name'], 'string'],
+            [['activity_id', 'parent_id', 'status', 'position', 'required', 'step_id', 'editable'], 'integer'],
+            [['header', 'description'], 'string', 'max' => 255],
+            [['show_in_export', 'show_in_statistic'], 'boolean']
         ];
     }
 
     /**
      * @inheritdoc
      */
-    public function attributeLabels ()
+    public function attributeLabels()
     {
         return [
             'id' => 'ID',
@@ -66,10 +73,14 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             'description' => 'Описание',
             'position' => 'Position',
             'required' => 'Обязательное',
+            'def_value' => 'Значение по умолчанию',
+            'editable' => 'Редактируемое поле',
+            'dealers_group' => 'Группа дилеров',
+            'dealer_id' => 'Номер дилера'
         ];
     }
 
-    public static function getFieldTypesList ()
+    public static function getFieldTypesList()
     {
         return [
             'date' => Yii::t('app', 'Дата'),
@@ -81,16 +92,41 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
         ];
     }
 
+    public function getDealer() {
+        return $this->hasOne(Dealers::className(), ['id' => 'dealer_id']);
+    }
+
+    /**
+     * Тип
+     * @return mixed
+     */
+    public function getTypeLabel()
+    {
+        return self::getFieldTypesList()[$this->value_type];
+    }
+
+    /**
+     * Получить список дилерских групп
+     * @return array
+     */
+    public static function getDealersGroups()
+    {
+        return [
+            'pkw' => Yii::t('app', 'PKW'),
+            'all' => Yii::t('app', 'Для всех дилеров'),
+        ];
+    }
+
     /**
      * @param $symbol
      * @return mixed
      */
-    public static function calcTypeLabel ( $symbol )
+    public static function calcTypeLabel($symbol)
     {
-        return self::getTypes()[ $symbol ];
+        return self::getTypes()[$symbol];
     }
 
-    public static function getTypes ()
+    public static function getTypes()
     {
         return [
             'plus' => '+',
@@ -101,29 +137,34 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
         ];
     }
 
-    public function isCalc ()
+    public function getSection()
+    {
+        return $this->hasOne(ActivityExtendedStatisticSections::className(), ['id' => 'parent_id']);
+    }
+
+    public function isCalc()
     {
         return $this->value_type == self::CALC ? true : false;
     }
 
-    public function isCalcField ()
+    public function isCalcField()
     {
-        return ActivityExtendedStatisticFieldsCalculated::find()->where([ 'parent_field' => $this->id ])->count() > 0;
+        return ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->count() > 0;
     }
 
-    public function getCalcType ()
+    public function getCalcType()
     {
-        return ActivityExtendedStatisticFieldsCalculated::find()->where([ 'parent_field' => $this->id ])->one()->calc_type;
+        return ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->one()->calc_type;
     }
 
-    public function getCalcFields ()
+    public function getCalcFields()
     {
-        return ActivityExtendedStatisticFieldsCalculated::find()->where([ 'parent_field' => $this->id ])->orderBy([ 'id' => SORT_ASC ])->all();
+        return ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->orderBy(['id' => SORT_ASC])->all();
     }
 
-    public function beforeDelete ()
+    public function beforeDelete()
     {
-        ActivityExtendedStatisticFieldsCalculated::deleteAll([ 'parent_field' => $this->id ]);
+        ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $this->id]);
 
         return parent::beforeDelete(); // TODO: Change the autogenerated stub
     }
@@ -131,14 +172,18 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     /**
      * @return string
      */
-    public function getCalcFieldsList ()
+    public function getCalcFieldsList()
     {
         $result = [];
         $symbol = '';
 
-        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where([ 'parent_field' => $this->id ])->all();
+        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->orderBy(['id' => SORT_ASC])->all();
         foreach ($calc_fields as $calc_field) {
-            $result[] = $calc_field->getCalcFieldName();
+            if (!empty($calc_field->custom_name)) {
+                $result[] = sprintf('[Кастомные функции] %s', self::getCustomFunctionsList()[$calc_field->custom_name]);
+            } else {
+                $result[] = sprintf('[%s] %s', $calc_field->getCalcFieldSectionName(), $calc_field->getCalcFieldName());
+            }
 
             $symbol = $calc_field->calc_type;
         }
@@ -149,13 +194,13 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
     /**
      * @return array
      */
-    public function getCalcFieldsIds ()
+    public function getCalcFieldsIds()
     {
         $result = [];
 
-        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where([ 'parent_field' => $this->id ])->all();
+        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
         foreach ($calc_fields as $calc_field) {
-            $result[] = $calc_field->calc_field;
+            $result[] = $calc_field->calc_field != 0 ? $calc_field->calc_field : $calc_field->custom_name;
         }
 
         return $result;
@@ -165,57 +210,125 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
      * @param $postData
      * @return array
      */
-    public static function saveData ( $postData )
+    public static function saveData($postData)
     {
-        $field = self::find()->where([ 'id' => $postData[ 'field_id' ] ])->one();
+        $field = self::find()->where(['id' => $postData['field_id']])->one();
         if (!$field) {
-            return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при сохранении поля.') ];
+            return ['success' => false, 'msg' => Yii::t('app', 'Ошибка при сохранении поля.')];
         }
 
-        foreach ($postData[ 'data' ] as $ind => $data) {
-            $field->{$data[ 'field' ]} = $data[ 'value' ];
+        foreach ($postData['data'] as $ind => $data) {
+            $field->{$data['field']} = $data['value'];
         }
         $field->save(false);
 
-        return [ 'success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.') ];
+        return ['success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.')];
     }
 
     /**
      * @param $postData
      * @return array
      */
-    public static function saveCalcFieldsData ( $postData )
+    public static function saveCalcFieldsData($postData)
     {
 
-        $field = self::find()->where([ 'id' => $postData[ 'field_id' ] ])->one();
+        $field = self::find()->where(['id' => $postData['field_id']])->one();
         if (!$field) {
-            return [ 'success' => false, 'msg' => Yii::t('app', 'Ошибка при сохранении поля.') ];
+            return ['success' => false, 'msg' => Yii::t('app', 'Ошибка при сохранении поля.')];
         }
 
-        ActivityExtendedStatisticFieldsCalculated::deleteAll([ 'parent_field' => $field->id ]);
+        ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $field->id]);
 
-        foreach ($postData[ "data" ] as $calc_field_item) {
+        foreach ($postData["data"] as $calc_field_item) {
             $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
 
             $new_calc_field->parent_field = $field->id;
-            $new_calc_field->calc_field = $calc_field_item[ 'id' ];
-            $new_calc_field->calc_type = $postData[ 'calc_type' ];
+            if (isset($calc_field_item['id'])) {
+                $new_calc_field->calc_field = $calc_field_item['id'];
+            } else {
+                $new_calc_field->custom_name = $calc_field_item['custom_name'];
+            }
+
+            $new_calc_field->calc_type = $postData['calc_type'];
             $new_calc_field->activity_id = $field->activity_id;
 
             $new_calc_field->save(false);
         }
 
-        return [ 'success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.') ];
+        return ['success' => true, 'msg' => Yii::t('app', 'Данные успешно сохранены.')];
     }
 
-    public static function makeSortFields ()
+    /**
+     * @param $postData
+     * @return array
+     */
+    public static function addNewCalculatedField($postData)
+    {
+        $is_new = true;
+
+        $section = ActivityExtendedStatisticSectionsTemplates::getSection();
+        if (!$section) {
+            return ['success' => false, 'msg' => Yii::t('app', 'Ошибка при добавлении формулы.')];
+        }
+
+        if (empty($postData['field_id'])) {
+            $field = new ActivityExtendedStatisticFields();
+            $field->setAttributes([
+                'header' => $postData['field_header'],
+                'value_type' => 'calc',
+                'activity_id' => $section->activity_id,
+                'parent_id' => $section->id,
+                'status' => 1,
+                'show_in_export' => $postData['show_in_export'],
+                'show_in_statistic' => $postData['show_in_statistic']
+            ]);
+        } else {
+            $is_new = false;
+
+            //Удаляем все привязанные поля
+            ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $postData['field_id']]);
+
+            $field = ActivityExtendedStatisticFields::findOne(['id' => $postData['field_id']]);
+            $field->setAttributes([
+                'header' => $postData['field_header'],
+                'show_in_export' => $postData['show_in_export'],
+                'show_in_statistic' => $postData['show_in_statistic']
+            ]);
+        }
+
+        if ($field->save(false)) {
+
+            foreach ($postData["data"] as $calc_field_item) {
+                $new_calc_field = new ActivityExtendedStatisticFieldsCalculated();
+
+                $new_calc_field->parent_field = $field->id;
+
+                if (is_numeric($calc_field_item['id'])) {
+                    $new_calc_field->calc_field = $calc_field_item['id'];
+                } else {
+                    $new_calc_field->custom_name = $calc_field_item['id'];
+                }
+
+                $new_calc_field->calc_type = $postData['calc_type'];
+                $new_calc_field->activity_id = $field->activity_id;
+
+                $new_calc_field->save(false);
+            }
+
+            return ['success' => true, 'msg' => Yii::t('app', $is_new ? 'Вычисляемое поле успешно добавлено.' : 'Параметры поля успешно изменены.'), 'section' => $section];
+        }
+
+        return ['success' => false, 'msg' => Yii::t('app', 'Ошибка добавления вычисляемого поля.')];
+    }
+
+    public static function makeSortFields()
     {
         $section_id = Yii::$app->request->post("section");
         $fields = Yii::$app->request->post("fields");
 
         $position = 1;
         foreach ($fields as $field) {
-            $field_item = ActivityExtendedStatisticFields::find()->where([ 'id' => $field, 'parent_id' => $section_id ])->one();
+            $field_item = ActivityExtendedStatisticFields::find()->where(['id' => $field, 'parent_id' => $section_id])->one();
             if ($field_item) {
                 $field_item->position = $position;
                 $field_item->save(false);
@@ -224,6 +337,61 @@ class ActivityExtendedStatisticFields extends \yii\db\ActiveRecord
             }
         }
 
-        return [ $position > 1 ? true : false ];
+        return [$position > 1 ? true : false];
+
     }
+
+    public function getCalcFieldsNames()
+    {
+        $fields_names = [];
+
+        $calc_fields = ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $this->id])->all();
+        foreach ($calc_fields as $field) {
+            $calc_field = ActivityExtendedStatisticFields::findOne(['id' => $field->calc_field]);
+            if ($calc_field) {
+                $fields_names[] = $calc_field->header . '&nbsp;<span class="task-cat teal" style="margin-left: 0px;">' . self::getCalcTypeName($calc_field->calc_type) . '</span>&nbsp;';
+            }
+        }
+
+        return implode(' ', $fields_names);
+    }
+
+    /**
+     * Удаление поля с проверкой на привязку участия поля в формулах
+     * Если поле привязано к формуле, поле не удаляется
+     * @param $fieldId
+     * @return array
+     */
+    public static function deleteField($fieldId)
+    {
+        //Если поле участвует в формуле как параметр
+        /*$calculated_field = ActivityExtendedStatisticFieldsCalculated::find()->where(['calc_field' => $fieldId]);
+        if ($calculated_field) {
+            return ['success' => false, 'message' => Yii::t('app', 'Поле привязано к формуле.')];
+        }*/
+
+        //Если поле является формулой, удаляем все привязки полей к формуле
+        if (ActivityExtendedStatisticFieldsCalculated::find()->where(['parent_field' => $fieldId])->count() > 0) {
+            ActivityExtendedStatisticFieldsCalculated::deleteAll(['parent_field' => $fieldId]);
+
+            self::deleteAll(['id' => $fieldId]);
+
+            return ['success' => true, 'message' => Yii::t('app', 'Формула успешно удалена.')];
+        }
+
+        $result = self::deleteAll(['id' => $fieldId]);
+
+        return ['success' => $result, 'message' => $result ? Yii::t('app', 'Поле успешно удалено') : Yii::t('app', 'Ошибка удаления поля') ];
+    }
+
+    /**
+     * Получить список кастомных функций
+     */
+    public static function getCustomFunctionsList() {
+        return [
+            'custom_function_activity_models_total_cash' => 'Сумма заявок',
+            'custom_function_activity_models_count' => 'Общее количество заявок'
+        ];
+    }
+
 }

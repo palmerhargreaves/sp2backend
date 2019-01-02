@@ -46,4 +46,37 @@ class ActivityStatisticsPeriods extends \yii\db\ActiveRecord
             'activity_id' => 'Activity ID',
         ];
     }
+
+    /**
+     * Привязка списка кварталов к активности
+     */
+    public static function bindQuarters() {
+        if (empty(Yii::$app->request->post('quarters'))) {
+            return self::deleteAll(['year' => Yii::$app->request->post('year'), 'activity_id' => Yii::$app->request->post('id')]);
+        }
+        else {
+            $item = self::findOne([ 'year' => Yii::$app->request->post('year'), 'activity_id' => Yii::$app->request->post('id') ]);
+            if (!$item) {
+                $item = new ActivityStatisticsPeriods();
+            }
+
+            $item->year = Yii::$app->request->post('year');
+            $item->activity_id = Yii::$app->request->post('id');
+            $item->quarters = Yii::$app->request->post('quarters');
+        }
+
+        return $item->save(false);
+    }
+
+    /**
+     * @param $activity_id
+     * @param $quarter
+     * @param $year
+     * @return int|string
+     */
+    public static function checkQuarter($activity_id, $quarter, $year) {
+        return self::find()
+            ->where(['activity_id' => $activity_id, 'year' => $year])
+            ->andWhere(['like', 'quarters', '%'.$quarter.'%', false])->count();
+    }
 }

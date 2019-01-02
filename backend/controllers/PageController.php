@@ -65,9 +65,12 @@ class PageController extends Controller
      * @return array|null|\yii\db\ActiveRecord|\yii\web\Response
      */
     protected function getActivity() {
-        $activity_id = Yii::$app->request->get('id') ?  Yii::$app->request->get('id') :Yii::$app->request->post('id');
-        $activity = Activity::find()->where(['id' => $activity_id])->one();
+        $activity_id = Yii::$app->request->get('id') ?  Yii::$app->request->get('id') : Yii::$app->request->post('id');
+        if (is_null($activity_id)) {
+            $activity_id = Yii::$app->request->get('activity_id') ?  Yii::$app->request->get('id') : Yii::$app->request->post('activity_id');
+        }
 
+        $activity = Activity::find()->where(['id' => $activity_id])->one();
         if (!$activity) {
             Yii::$app->session->setFlash('error', Yii::t('app', 'Активность не найдена.'));
 

@@ -1,0 +1,26 @@
+.active-block-item {
+    background-color: #fffde8 !important;
+}
+
+.caret {
+    border-top: 0px !important;
+}
+
+.img-block-graph {
+    width: 100px;
+    opacity: 0.5;
+}
+
+.img-block-graph:hover {
+    opacity: 1;
+
+    cursor: pointer;
+}
+
+.active {
+    opacity: 1;
+}
+
+table.blocks-rows tr td {
+    padding: 0px;
+}

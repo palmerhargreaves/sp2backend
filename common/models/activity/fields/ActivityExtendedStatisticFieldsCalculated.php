@@ -11,6 +11,8 @@ use Yii;
  * @property integer $parent_field
  * @property integer $calc_field
  * @property string $calc_type
+ * @property string $calcFieldName
+ * @property mixed $calcFieldsNames
  * @property integer $activity_id
  */
 class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
@@ -30,7 +32,7 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
     {
         return [
             [['parent_field', 'calc_field', 'calc_type', 'activity_id'], 'required'],
-            [['parent_field', 'calc_field', 'activity_id'], 'integer'],
+            [['parent_field', 'calc_field', 'activity_id', 'section_id'], 'integer'],
             [['calc_type'], 'string'],
         ];
     }
@@ -49,12 +51,43 @@ class ActivityExtendedStatisticFieldsCalculated extends \yii\db\ActiveRecord
         ];
     }
 
-    public function getCalcFieldName() {
-        $field = ActivityExtendedStatisticFields::find()->where(['id' => $this->calc_field])->one();
-        if ($field) {
-            return $field->header;
+    /**
+     * @param $calc_type
+     * @return string
+     */
+    public static function getCalcTypeName($calc_type) {
+        $calc_types = [
+            'plus' => '+',
+            'minus' => '-',
+            'divide' => '/',
+            'multiple' => '*',
+            'percent' => '%'
+        ];
+
+        if (array_key_exists($calc_type, $calc_types)) {
+            return $calc_types[$calc_type];
         }
 
         return '';
+    }
+
+    public function getCalcFieldName() {
+        if ($this->field) {
+            return $this->field->header;
+        }
+
+        return '';
+    }
+
+    public function getCalcFieldSectionName() {
+        if ($this->field) {
+            return $this->field->section->header;
+        }
+
+        return '';
+    }
+
+    public function getField() {
+        return $this->hasOne(ActivityExtendedStatisticFields::className(), ['id' => 'calc_field']);
     }
 }

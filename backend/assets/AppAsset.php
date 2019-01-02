@@ -28,6 +28,9 @@ class AppAsset extends AssetBundle
         "assets/materialize/js/plugins/sweetalert/sweetalert.css",
         "assets/materialize/css/spectrum.css",
         "assets/css/timeline.css",
+        "assets/materialize/js/plugins/animate-css/animate.css",
+
+        "assets/css/app.css",
     ];
 
     public $js = [
@@ -63,6 +66,20 @@ class AppAsset extends AssetBundle
 
         "assets/materialize/js/plugins/floatThead/jquery.floatThead.min.js",
         "assets/materialize/js/plugins/floatThead/jquery.floatThead-slim.min.js",
+
+        "assets/materialize/js/plugins/jquery-validation/jquery.validate.min.js",
+        "assets/materialize/js/plugins/jquery-validation/additional-methods.min.js",
+
+        "assets/js/plugins/draggable/draggable.js",
+
+        "assets/js/app/app.js",
+
+        "assets/js/app/activity/statistic/base_form.js",
+        "assets/js/app/activity/statistic/activity_statistic.js",
+        "assets/js/app/activity/statistic/form.js",
+
+        "assets/js/app/activity/company/image.js",
+
     ];
 
     public $depends = [

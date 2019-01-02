@@ -49,6 +49,9 @@ use Yii;
  * @property integer $mandatory_activity
  * @property integer allow_special_agreement
  * @property string $event_name
+ * @property string $company_target
+ * @property string $target_audience
+ * @property string $company_mechanics
  */
 class Activity extends CustomRecord
 {
@@ -71,9 +74,9 @@ class Activity extends CustomRecord
     public function rules()
     {
         return [
-            [['name', 'start_date', 'end_date', 'efficiency_description', 'created_at', 'updated_at', 'stats_description', 'stat_quarter'], 'required'],
+            [['name', 'start_date', 'end_date', 'efficiency_description', 'created_at', 'updated_at', 'stats_description', 'stat_quarter', 'company_target', 'target_audience', 'company_mechanics'], 'required'],
             [['start_date', 'end_date', 'created_at', 'updated_at'], 'safe'],
-            [['description', 'efficiency_description', 'brief', 'custom_date', 'stats_description'], 'string'],
+            [['description', 'efficiency_description', 'brief', 'custom_date', 'stats_description', 'company_target', 'target_audience', 'company_mechanics'], 'string'],
             [['finished', 'importance', 'sort', 'has_concept', 'many_concepts', 'is_concept_complete', 'hide', 'select_activity', 'is_limit_run', 'allow_to_all_dealers', 'stat_year', 'position', 'is_own', 'allow_extended_statistic', 'allow_certificate', 'allow_share_name', 'type_company_id', 'own_activity', 'required_activity', 'mandatory_activity', 'allow_special_agreement'], 'integer'],
             [['name', 'materials_url', 'event_name'], 'string', 'max' => 255],
             [['stat_quarter'], 'string', 'max' => 30],
@@ -121,6 +124,9 @@ class Activity extends CustomRecord
             'required_activity' => 'Required ActivityController',
             'mandatory_activity' => 'Mandatory ActivityController',
             'event_name' => 'Event Name',
+            'company_target' => 'Цель кампании',
+            'target_audience' => 'Целевая аудитория',
+            'company_mechanics' => 'Механика компании'
         ];
     }
 
@@ -165,5 +171,17 @@ class Activity extends CustomRecord
      */
     public function getActivityVideoStatistic() {
         return ActivityVideoRecordsStatistics::find()->where(['activity_id' => $this->id])->one();
+    }
+
+    public function checkStatisticExists() {
+        if (!$this->getActivityVideoStatistic()) {
+            $statistic = new ActivityVideoRecordsStatistics();
+            $statistic->setAttributes([
+                'activity_id' => $this->id,
+                'header' => sprintf('Статистика (%d)', $this->id),
+                'status' => 1
+            ]);
+            $statistic->save();
+        }
     }
 }
