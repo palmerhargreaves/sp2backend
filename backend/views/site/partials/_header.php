@@ -15,9 +15,11 @@
         <nav class="navbar-color">
             <div class="nav-wrapper">
                 <ul class="left">
-                    <li><h1 class="logo-wrapper"><a href="/admin" class="brand-logo darken-1">
-                                <img src="" alt="Admin SP 2"></a> <span class="logo-text">Admin SP 2</span>
-                        </h1></li>
+                    <li>
+                        <h1 class="logo-wrapper">
+                            <a href="/admin" class="brand-logo darken-1"><span class="logo-text" style="display: block;">Admin SP 2</span></a>
+                        </h1>
+                    </li>
                 </ul>
                 <div class="header-search-wrapper hide-on-med-and-down">
                     <i class="mdi-action-search"></i>

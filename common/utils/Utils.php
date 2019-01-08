@@ -264,4 +264,14 @@ class Utils
         return $days;
     }
 
+    static function getQuartersMonths() {
+        return array
+        (
+            1 => array(1, 2, 3),
+            2 => array(4, 5, 6),
+            3 => array(7, 8, 9),
+            4 => array(10, 11, 12)
+        );
+    }
+
 }

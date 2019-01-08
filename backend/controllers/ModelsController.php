@@ -9,7 +9,9 @@
 namespace backend\controllers;
 
 
+use common\models\agreement_model\statistic\ModelsCompletedCountUtil;
 use common\models\model\block_inform\AgreementModelsBlockInformUtils;
+
 use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
@@ -31,7 +33,8 @@ class ModelsController extends PageController
                     [
                         'actions' => [
                             'logout',
-                            'block-inform'
+                            'block-inform',
+                            'completed-calculate-count'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -45,6 +48,16 @@ class ModelsController extends PageController
                 ],
             ],
         ];
+    }
+
+    /**
+     * Вычисление количетсва выполненных заявок за выбранный период
+     */
+    public function actionCompletedCalculateCount() {
+
+        return $this->render('completed-calculate-count', [
+            'models_completed_count_util' => new ModelsCompletedCountUtil
+        ]);
     }
 
     /**

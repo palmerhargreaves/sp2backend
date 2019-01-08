@@ -64,7 +64,8 @@ $isActiveMenu = function($parent) {
                     </a>
                     <div class="collapsible-body">
                         <ul>
-                            <li class="<?php echo $isActiveMenu('activity') ? "active" : ""; ?>"><a href="<?php echo Url::to(['/models/block-inform']); ?>">Блокировка</a></li>
+                            <li class="<?php echo $isActiveMenu('/models/block-inform') ? "active" : ""; ?>"><a href="<?php echo Url::to(['/models/block-inform']); ?>">Блокировка</a></li>
+                            <li class="<?php echo $isActiveMenu('/models/completed-calculate-count') ? "active" : ""; ?>"><a href="<?php echo Url::to(['/models/completed-calculate-count']); ?>">Подсчет заявок</a></li>
                         </ul>
                     </div>
                 </li>

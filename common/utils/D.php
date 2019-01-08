@@ -23,6 +23,13 @@ class D {
         'сентября', 'октября', 'ноября', 'декабря'
     );
 
+    static function getMonthName($month_index)
+    {
+        $months = array("Янв.", "Фев.", "Мар.", "Апр.", "Май", "Июнь", "Июль", "Авг.", "Сен.", "Окт.", "Ноя.", "Дек.");
+
+        return $months[$month_index - 1];
+    }
+
     private static $_calendar_dates = array();
 
     public static function toUnix($date)

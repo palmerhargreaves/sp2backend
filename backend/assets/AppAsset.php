@@ -80,6 +80,8 @@ class AppAsset extends AssetBundle
 
         "assets/js/app/activity/company/image.js",
 
+        "assets/js/app/models/completed_count.js",
+
     ];
 
     public $depends = [
