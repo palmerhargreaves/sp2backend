@@ -6,6 +6,7 @@ use common\models\activity\Activity;
 use common\models\agreement_model\traits\AgreementModelStatsTrait;
 use common\models\AgreementModelValue;
 use common\models\dealers\Dealers;
+use common\models\Log;
 use common\models\model\AgreementModelReport;
 use Yii;
 
@@ -181,5 +182,9 @@ class AgreementModel extends \yii\db\ActiveRecord
 
     public function getValues() {
         return $this->hasMany(AgreementModelValue::className(), ['model_id' => 'id']);
+    }
+
+    public function getLog() {
+        return $this->hasMany(Log::className(), ['object_id' => 'id']);
     }
 }

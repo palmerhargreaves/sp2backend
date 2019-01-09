@@ -54,9 +54,16 @@ class ModelsController extends PageController
      * Вычисление количетсва выполненных заявок за выбранный период
      */
     public function actionCompletedCalculateCount() {
+        if (\Yii::$app->request->isPost && \Yii::$app->request->isAjax) {
+            $models_utils = new ModelsCompletedCountUtil(\Yii::$app->request);
+
+            return $this->renderPartial('partials/_completed_models_count', [
+                'items_list' => $models_utils->filterData()
+            ]);
+        }
 
         return $this->render('completed-calculate-count', [
-            'models_completed_count_util' => new ModelsCompletedCountUtil
+            'models_completed_count_util' => new ModelsCompletedCountUtil()
         ]);
     }
 

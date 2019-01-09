@@ -2,6 +2,7 @@
 
 namespace common\models;
 
+use common\models\agreement_model\AgreementModel;
 use Yii;
 
 /**
@@ -69,5 +70,9 @@ class Log extends \yii\db\ActiveRecord
             'message_id' => 'Message ID',
             'private_user_id' => 'Private User ID',
         ];
+    }
+
+    public function getAgreementModel() {
+        return $this->hasOne(AgreementModel::className(), ['id' => 'object_id']);
     }
 }

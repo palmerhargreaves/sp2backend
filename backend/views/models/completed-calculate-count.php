@@ -7,6 +7,7 @@
  */
 use common\utils\D;
 use common\utils\Utils;
+use yii\helpers\Url;
 
 ?>
     <div id="modal-model-logs-history" class="modal modal-fixed-footer">
@@ -46,7 +47,7 @@ use common\utils\Utils;
                         <div class="col s12 m12 l12">
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <select>
+                                    <select id="filter_year">
                                         <?php foreach ($models_completed_count_util->getYearsList() as $year_item): ?>
                                             <option <?php echo $year_item['selected'] ? 'selected' : ''; ?>><?php echo $year_item['year']; ?></option>
                                         <?php endforeach; ?>
@@ -83,7 +84,7 @@ use common\utils\Utils;
                                 <?php foreach ($models_completed_count_util->getMonthsList() as $quarter => $months): ?>
                                     <?php foreach ($months as $month): ?>
                                         <div class="input-field col s1">
-                                            <input type="checkbox" class="months" id="month_<?php echo $month; ?>" data-month-quarter="<?php echo $quarter; ?>"/>
+                                            <input type="checkbox" class="months" id="month_<?php echo $month; ?>" data-month="<?php echo $month; ?>" data-month-quarter="<?php echo $quarter; ?>"/>
                                             <label for="month_<?php echo $month; ?>"><?php echo D::getMonthName($month); ?></label>
                                         </div>
                                     <?php endforeach; ?>
@@ -98,9 +99,10 @@ use common\utils\Utils;
                     <div class="row">
                         <div class="col s12">
                             <div class="input-field col s12">
-                                <button id="js_make_filter" class="btn cyan waves-effect waves-light right"
-                                        type="submit"
-                                        name="action">Фильтр
+                                <button id="js-make-filter" class="btn cyan waves-effect waves-light right"
+                                        type="button"
+                                        name="action"
+                                        data-url="<?php echo Url::to(['/models/completed-calculate-count']); ?>">Фильтр
                                     <i class="mdi-action-search right"></i>
                                 </button>
                             </div>
@@ -113,22 +115,14 @@ use common\utils\Utils;
 
     <div class="divider"></div>
 
-    <div class="loading-progress" class="col s12 m8 l9">
+    <div class="loading-progress" class="col s12 m8 l9" style="display: none;">
         <div class="progress">
             <div class="indeterminate"></div>
         </div>
     </div>
 
-    <div id="container-data" style="display: none;">
-        <div class="col s12 m12 l12">
-            <div class="card-panel">
-                <h4 class="header">Проверки по заявкам за выбранный период</h4>
-                <p></p>
+    <div id="container-data">
 
-                <div id="container-filter-models-list" class="col s12 m8 l12"></div>
-            </div>
-
-        </div>
     </div>
 
 <?php $this->registerJs('
