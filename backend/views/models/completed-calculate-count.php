@@ -47,7 +47,7 @@ use yii\helpers\Url;
                         <div class="col s12 m12 l12">
                             <div class="row">
                                 <div class="input-field col s6">
-                                    <select id="filter_year">
+                                    <select id="filter_year" data-url="<?php echo Url::to(['/models/on-change-year']); ?>">
                                         <?php foreach ($models_completed_count_util->getYearsList() as $year_item): ?>
                                             <option <?php echo $year_item['selected'] ? 'selected' : ''; ?>><?php echo $year_item['year']; ?></option>
                                         <?php endforeach; ?>
@@ -58,18 +58,16 @@ use yii\helpers\Url;
                     </div>
                 </div>
 
+                <?php
+                    $quarters_list = $models_completed_count_util->getQuartersList();
+                ?>
                 <div class="divider"></div>
                 <div class="section">
                     <h6 class="header6">Выберите квартал(ы)</h6>
                     <div class="row">
                         <div class="col s12 m12 l12">
-                            <div class="row">
-                                <?php foreach ($models_completed_count_util->getQuartersList() as $quarter): ?>
-                                    <div class="input-field col s2">
-                                        <input type="checkbox" class="quarters" id="quarter_<?php echo $quarter; ?>" data-quarter="<?php echo $quarter; ?>"/>
-                                        <label for="quarter_<?php echo $quarter; ?>"><?php echo sprintf('Квартал: %s', $quarter); ?></label>
-                                    </div>
-                                <?php endforeach; ?>
+                            <div id="container-quarters" class="row">
+                                <?php echo Yii::$app->controller->renderPartial('partials/_quarters_list', [ 'quarters_list' => $quarters_list ]); ?>
                             </div>
                         </div>
                     </div>
@@ -80,15 +78,8 @@ use yii\helpers\Url;
                     <h6 class="header6">Выберите месяц(ы)</h6>
                     <div class="row">
                         <div class="col s12 m12 l12">
-                            <div class="row">
-                                <?php foreach ($models_completed_count_util->getMonthsList() as $quarter => $months): ?>
-                                    <?php foreach ($months as $month): ?>
-                                        <div class="input-field col s1">
-                                            <input type="checkbox" class="months" id="month_<?php echo $month; ?>" data-month="<?php echo $month; ?>" data-month-quarter="<?php echo $quarter; ?>"/>
-                                            <label for="month_<?php echo $month; ?>"><?php echo D::getMonthName($month); ?></label>
-                                        </div>
-                                    <?php endforeach; ?>
-                                <?php endforeach; ?>
+                            <div id="container-months" class="row">
+                                <?php echo Yii::$app->controller->renderPartial('partials/_months_list', [ 'quarters_list' => $quarters_list ]); ?>
                             </div>
                         </div>
                     </div>

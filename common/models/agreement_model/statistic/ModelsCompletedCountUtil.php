@@ -5,6 +5,7 @@ namespace common\models\agreement_model\statistic;
 
 use common\models\agreement_model\AgreementModel;
 use common\models\Log;
+use common\utils\D;
 use common\utils\Utils;
 use yii\web\Request;
 
@@ -24,20 +25,25 @@ class ModelsCompletedCountUtil {
     const MANAGER = 'manager';
     const MANAGER_DESIGNER = 'manager_designer';
 
+    const DAY = 'day';
+    const QUARTER = 'quarter';
+    const MONTHS = 'months';
+    const YEAR = 'year';
+
     public function __construct(Request $request = null)
     {
         $this->_request = $request;
 
-        $current_year = date('Y');
+        $current_year = $request && $request->post('year') ? $request->post('year') : date('Y');
         $this->_years_list = array_reverse(array_map(function($item) use($current_year) {
             $log_year = date('Y', strtotime($item['created_at']));
 
             return ['year' => $log_year, 'selected' => $current_year == $log_year];
         }, AgreementModel::find()->select(['created_at'])->groupBy(['year(created_at)'])->all()));
 
-        $this->_quarters_list = range(1, 4);
+        $this->_quarters_list = $this->getQuartersListByYear($current_year);
 
-        $this->_months_list = Utils::getQuartersMonths();
+        $this->_months_list = $this->getMonthsListByYear($current_year);
     }
 
     /**
@@ -53,24 +59,70 @@ class ModelsCompletedCountUtil {
 
         //Выборка данных по заявкам только по выюранной дате
         if (!empty($selected_data)) {
-            $this->getModelsCheckedList($selected_data);
+            return $this->getModelsCheckedList($selected_data, true);
         } else {
             //Выборка по году / кварталу / месяцу
 
+            //Выборка по месяцу
+            if (!empty($months)) {
+                foreach ($months as $month) {
+                    $date = sprintf('%s-%s', $year, $month < 10 ? '0'.$month : $month);
+
+                    $result[$month] = $this->getModelsCheckedList($date);
+                }
+
+                return [ 'check_by' => self::MONTHS, 'data' => $result ];
+            }
+            //Выборка по кварталам
+            else if (!empty($quarters)) {
+                foreach ($quarters as $quarter) {
+                    $quarter_months = !empty($months) ? $months : D::getQuarterMonths($quarter);
+
+                    foreach ($quarter_months as $month) {
+                        $date = sprintf('%s-%s', $year, $month < 10 ? '0'.$month : $month);
+
+                        $result[$quarter][] = $this->getModelsCheckedList($date);
+                    }
+                }
+
+                return [ 'check_by' => self::QUARTER, 'data' => $result ];
+            }
+            //Выборка по году
+            else {
+                $quarters = !empty($quarters) ? $quarters : $this->getQuartersListByYear($year);
+                foreach ($quarters as $quarter) {
+                    $quarter_months = !empty($months) ? $months : D::getQuarterMonths($quarter);
+
+                    foreach ($quarter_months as $month) {
+                        $date = sprintf('%s-%s', $year, $month < 10 ? '0'.$month : $month);
+
+                        $result[$quarter][] = $this->getModelsCheckedList($date);
+                    }
+                }
+
+                return [ 'check_by' => self::QUARTER, 'data' => $result ];
+
+            }
         }
     }
 
-    private function getModelsCheckedList($date) {
+    private function getModelsCheckedList($date, $only_by_day = false) {
         $check_models_list = [ ];
 
         //Выборка завок проверенных только менеджеров
         $result_only_manager = $this->makeQuery($date);
+
         $result_manager_designer_models_ids = [];
         foreach ($result_only_manager as $result_item) {
             //Отбработка заявок олько менеджером
             if ($result_item['work_type'] == self::MANAGER) {
-                if (!in_array($result_item['object_id'], $check_models_list)) {
-                    $check_models_list[] = $result_item['object_id'];
+                $item_date = date('Y-m-d', strtotime($result_item['created_at']));
+                if (!array_key_exists($item_date, $check_models_list)) {
+                    $check_models_list[$item_date] = [];
+                }
+
+                if (!in_array($result_item['object_id'], $check_models_list[$item_date])) {
+                    $check_models_list[$item_date][] = $result_item['object_id'];
                 }
             } else {
                 $result_manager_designer_models_ids[$result_item['object_id']] = $result_item['object_id'];
@@ -78,12 +130,127 @@ class ModelsCompletedCountUtil {
         }
 
         //Выборка заявок проверенных менеджером / дизайнером
-        var_dump(array_values($result_manager_designer_models_ids));
-        exit;
-        $result_manager_designer = $this->makeQuery('', array_values($result_manager_designer_models_ids));
+        $result_manager_designer = $this->makeQuery($date, array_values($result_manager_designer_models_ids));
+        $check_manager_designer_result = [];
+        foreach ($result_manager_designer as $result_item) {
+            $item_date = date('Y-m-d', strtotime($result_item['created_at']));
 
-        foreach ($result_only_manager as $result_item) {
+            //Номер заявки
+            if (!array_key_exists($result_item['object_id'], $check_manager_designer_result)) {
+                $check_manager_designer_result[ $result_item['object_id'] ] = [];
+            }
 
+            //Дата проверки заявки
+            if (!array_key_exists($item_date, $check_manager_designer_result[ $result_item['object_id'] ])) {
+                $check_manager_designer_result[ $result_item['object_id'] ][ $item_date ] = [ ];
+            }
+
+            //Действие выполненное при проверке
+            if (!in_array($result_item['action'], $check_manager_designer_result[ $result_item['object_id'] ][ $item_date ])) {
+                $check_manager_designer_result[ $result_item[ 'object_id' ] ][ $item_date ][] = $result_item[ 'action' ];
+            }
+        }
+
+        //Если выборка данных только за один день
+        //Проверяем на полную проверку менеджера / дизайнера за выбранный день
+        $check_models_list_by_manager_designer = [];
+        if ($only_by_day) {
+            foreach ($check_manager_designer_result as $object_id => $items) {
+                //Проверка менеджера
+                $manager_check = false;
+                if (in_array('accepted', $items[$date]) || in_array('declined', $items[$date])) {
+                    $manager_check = true;
+                }
+
+                //Проверка дизайнера
+                $designer_check = false;
+                if (in_array('accepted_by_specialist', $items[$date]) || in_array('declined_by_specialist', $items[$date])) {
+                    $designer_check = true;
+                }
+
+                //Если есть обе проверки от пользователей
+                if ($manager_check && $designer_check) {
+                    if (!in_array($object_id, $check_models_list[$date])) {
+                        $check_models_list_by_manager_designer[] = $object_id;
+                    }
+                }
+            }
+
+            return [
+                'check_by' => self::DAY,
+                'check_by_date' => $date,
+                'check_count' => !empty($check_models_list) ? count(array_values($check_models_list)[0]) : 0,
+                'check_count_by_manager_designer' => count($check_models_list_by_manager_designer)
+            ];
+        } else {
+            //Определяем выполнение есловий получение статуса Проверено, должна бьть проверка менеджером и дизайнером
+            //Если условие не выполняется, учитываем для заявки статус выполнения (кем)
+            //Проходим по всем записям пока условие выполнения проверки не будет корректным
+
+            $model_check_status = [ ];
+            foreach ($check_manager_designer_result as $object_id => $items) {
+                foreach ($items as $date_key => $date_items) {
+
+                    //Проверка менеджера
+                    $manager_check = false;
+                    if (in_array('accepted', $date_items) || in_array('declined', $date_items)) {
+                        $manager_check = true;
+                    }
+
+                    //Проверка дизайнера
+                    $designer_check = false;
+                    if (in_array('accepted_by_specialist', $date_items) || in_array('declined_by_specialist', $date_items)) {
+                        $designer_check = true;
+                    }
+
+                    if (!array_key_exists($date_key, $check_models_list_by_manager_designer)) {
+                        $check_models_list_by_manager_designer[$date_key] = [];
+                    }
+
+                    //Если есть история проверок
+                    if (!empty($model_check_status)) {
+                        //Если проверка не была выполнена менеджером
+                        if (in_array('manager', $model_check_status) && $manager_check) {
+                            $designer_check = true;
+                        }
+
+                        //Если проверка не была выполнена дизайнером
+                        if (in_array('designer', $model_check_status) && $designer_check) {
+                            $manager_check = true;
+                        }
+
+                        $model_check_status = [];
+                    }
+
+                    //Если есть обе проверки от пользователей
+                    if ($manager_check && $designer_check) {
+                        if (!in_array($object_id, $check_models_list_by_manager_designer[$date_key])) {
+                            $check_models_list_by_manager_designer[$date_key][] = $object_id;
+                        }
+                    } else {
+                        //Проверка не выполнена менеджером
+                        if (!$manager_check) {
+                            $model_check_status[] = 'manager';
+                        }
+
+                        //Проверка не выполнена дизайнером
+                        if (!$designer_check) {
+                            $model_check_status[] = 'designer';
+                        }
+                    }
+                }
+            }
+
+            $result_items = [];
+            foreach ($check_models_list as $date_key => $items) {
+                $result_items[$date_key]['manager_check_count'] = count($items);
+            }
+
+            foreach ($check_models_list_by_manager_designer as $date_key => $items) {
+                $result_items[$date_key]['manager_designer_check_count'] = count($items);
+            }
+
+            return $result_items;
         }
     }
 
@@ -100,7 +267,7 @@ class ModelsCompletedCountUtil {
             ->innerJoin('agreement_model_categories', 'agreement_model_categories.id = agreement_model.model_category_id')
             ->where(['object_type' => 'agreement_model'])
             ->andWhere(['IN', 'action', ['declined', 'accepted', 'declined_by_specialist', 'accepted_by_specialist']])
-            ->orderBy(['log.id' => SORT_DESC])
+            ->orderBy(['log.id' => SORT_ASC])
             ->asArray();
 
         //Выборка данных по дате
@@ -123,6 +290,30 @@ class ModelsCompletedCountUtil {
 
     private function getReportsCheckedList($date) {
 
+    }
+
+    /**
+     * Получить список месяцев по году
+     * @param $year
+     * @return array
+     */
+    private function getMonthsListByYear($year) {
+        return array_map(function($item) {
+            return date('n', strtotime($item['created_at']));
+        },
+            Log::find()->select(['created_at'])->where(['year(created_at)' => $year])->groupBy(['month(created_at)'])->all());
+    }
+
+    /**
+     * Получить список доступных кварталов по году
+     * @param $year
+     * @return array
+     */
+    private function getQuartersListByYear($year) {
+        return array_map(function($item) {
+            return  D::getQuarter(date('Y-m-d', strtotime($item['created_at'])));
+        },
+            Log::find()->select(['created_at'])->where(['year(created_at)' => $year])->groupBy(['quarter(created_at)'])->all());
     }
 
     /**

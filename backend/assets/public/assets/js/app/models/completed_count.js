@@ -18,6 +18,9 @@ ModelsCompletedCount.prototype = {
         //Выбор кварталов
         $(document).on('change', '.quarters', $.proxy(this.onSelectQuarter, this));
 
+        //Выбор по году
+        $(document).on('change', '#filter_year', $.proxy(this.onSelectYear, this));
+
         //Фильтр заявок по выбранным данным
         $(document).on('click', '#js-make-filter', $.proxy(this.onFilterData, this));
     },
@@ -29,6 +32,8 @@ ModelsCompletedCount.prototype = {
             year = $('#filter_year').val(),
             selected_data = $('#filter_date').parent().find("input[type=hidden]").val();
 
+        this.getContainerResult().html('');
+        this.showLoader();
         $.post(bt.data('url'), {
             year: year,
             quarters: quarters,
@@ -39,6 +44,26 @@ ModelsCompletedCount.prototype = {
 
     filterResult: function(result) {
         this.getContainerResult().html(result);
+
+        // Materialize Tabs
+        if ($('.tabs-months').length > 0) {
+            $('.tabs-months').show().tabs();
+        }
+
+        this.hideLoader();
+    },
+
+    onSelectYear: function(event) {
+        var el = $(event.currentTarget);
+
+        $.post(el.data('url'), {
+            year: el.val()
+        }, $.proxy(this.onSelectYearResult, this));
+    },
+
+    onSelectYearResult: function(data) {
+        $('#container-quarters').html(data.quarters_list);
+        $('#container-months').html(data.months_list);
     },
 
     onSelectQuarter: function() {
@@ -74,5 +99,17 @@ ModelsCompletedCount.prototype = {
 
     getContainerResult: function() {
         return $('#container-data');
+    },
+
+    getLoader: function() {
+        return $('.loading-progress');
+    },
+
+    showLoader: function() {
+        this.getLoader().show();
+    },
+
+    hideLoader: function() {
+        this.getLoader().hide();
     }
 }

@@ -17,13 +17,14 @@
             <table class="responsive-table bordered striped">
                 <thead>
                 <tr>
-                    <th>Test</th>
+                    <th>Дата</th>
+                    <th>Количество проверок</th>
                 </tr>
                 </thead>
 
                 <tbody>
                 <tr>
-                    <td><test></test></td>
+
                 </tr>
                 </tbody>
             </table>

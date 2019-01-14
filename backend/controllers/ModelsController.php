@@ -34,7 +34,8 @@ class ModelsController extends PageController
                         'actions' => [
                             'logout',
                             'block-inform',
-                            'completed-calculate-count'
+                            'completed-calculate-count',
+                            'on-change-year'
                         ],
                         'allow' => true,
                         'roles' => [ '@' ],
@@ -57,14 +58,29 @@ class ModelsController extends PageController
         if (\Yii::$app->request->isPost && \Yii::$app->request->isAjax) {
             $models_utils = new ModelsCompletedCountUtil(\Yii::$app->request);
 
-            return $this->renderPartial('partials/_completed_models_count', [
-                'items_list' => $models_utils->filterData()
+            $filter_result = $models_utils->filterData();
+            return $this->renderPartial('partials/_completed_models_count_by_'.$filter_result['check_by'], [
+                'result' => $filter_result
             ]);
         }
 
         return $this->render('completed-calculate-count', [
             'models_completed_count_util' => new ModelsCompletedCountUtil()
         ]);
+    }
+
+    /**
+     * Обработка выбора года
+     */
+    public function actionOnChangeYear() {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $models_utils = new ModelsCompletedCountUtil(\Yii::$app->request);
+
+        return [
+            'quarters_list' => $this->renderPartial('partials/_quarters_list', [ 'quarters_list' => $models_utils->getQuartersList() ]),
+            'months_list' => $this->renderPartial('partials/_months_list.php', [ 'quarters_list' => $models_utils->getQuartersList() ])
+        ];
     }
 
     /**

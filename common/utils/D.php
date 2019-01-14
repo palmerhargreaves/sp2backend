@@ -282,4 +282,16 @@ class D {
 
         return date($format, strtotime($sign . $plusDays . ' days', D::toUnix($date)));
     }
+
+    static function getQuarterMonths($q) {
+        $q_months = array
+        (
+            1 => array(1, 2, 3),
+            2 => array(4, 5, 6),
+            3 => array(7, 8, 9),
+            4 => array(10, 11, 12)
+        );
+
+        return $q_months[$q];
+    }
 }
