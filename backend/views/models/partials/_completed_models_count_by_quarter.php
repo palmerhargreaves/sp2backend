@@ -29,6 +29,7 @@
                                 <th>Дата</th>
                                 <th>Проверено менеджером</th>
                                 <th>Проверено менеджером / Дизайнером</th>
+                                <th>Проверено отчетов</th>
                                 <th>Всего заявок</th>
                             </tr>
                             </thead>
@@ -36,6 +37,7 @@
                             <?php
                             $sum_manager_count = 0;
                             $sum_manager_designer_count = 0;
+                            $sum_reports_count = 0;
                             $sum_total = 0;
                             ?>
 
@@ -45,6 +47,7 @@
                                     <?php
                                     $manager_check_count = isset($date_item['manager_check_count']) ? $date_item['manager_check_count'] : 0;
                                     $manager_designer_check_count = isset($date_item['manager_designer_check_count']) ? $date_item['manager_designer_check_count'] : 0;
+                                    $reports_check_count =  isset($date_item['reports_check_count']) ? $date_item['reports_check_count'] : 0;
 
                                     $manager_designer_both = $manager_check_count + $manager_designer_check_count;
                                     ?>
@@ -52,12 +55,14 @@
                                         <td><?php echo $date_key; ?></td>
                                         <td><?php echo $manager_check_count; ?></td>
                                         <td><?php echo $manager_designer_check_count; ?></td>
+                                        <td><?php echo $reports_check_count; ?></td>
                                         <td><?php echo $manager_designer_both; ?></td>
                                     </tr>
 
                                     <?php
                                     $sum_manager_count += $manager_check_count;
                                     $sum_manager_designer_count += $manager_designer_check_count;
+                                    $sum_reports_count += $reports_check_count;
                                     $sum_total += $manager_designer_both;
                                     ?>
                                 <?php endforeach; ?>
@@ -69,6 +74,7 @@
                                 <td>Всего: </td>
                                 <td><?php echo $sum_manager_count; ?></td>
                                 <td><?php echo $sum_manager_designer_count; ?></td>
+                                <td><?php echo $sum_reports_count; ?></td>
                                 <td><?php echo $sum_total; ?></td>
                             </tr>
                             </tfoot>

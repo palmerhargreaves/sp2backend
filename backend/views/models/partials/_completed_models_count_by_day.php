@@ -20,6 +20,7 @@
                     <th>Дата</th>
                     <th>Проверено менеджером</th>
                     <th>Проверено менеджером / Дизайнером</th>
+                    <th>Проверено отчетов</th>
                     <th>Всего заявок</th>
                 </tr>
                 </thead>
@@ -29,6 +30,7 @@
                     <td><?php echo $result['check_by_date']; ?></td>
                     <td><?php echo $result['check_count']; ?></td>
                     <td><?php echo $result['check_count_by_manager_designer']; ?></td>
+                    <td><?php echo $result['check_reports_count']; ?></td>
                     <td><?php echo $result['check_count'] + $result['check_count_by_manager_designer']; ?></td>
                 </tr>
                 </tbody>
