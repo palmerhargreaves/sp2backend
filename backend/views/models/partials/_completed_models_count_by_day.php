@@ -25,15 +25,17 @@
                 </tr>
                 </thead>
 
+                <?php if (!empty($result['data'])): ?>
                 <tbody>
                 <tr>
-                    <td><?php echo $result['check_by_date']; ?></td>
-                    <td><?php echo $result['check_count']; ?></td>
-                    <td><?php echo $result['check_count_by_manager_designer']; ?></td>
-                    <td><?php echo $result['check_reports_count']; ?></td>
-                    <td><?php echo $result['check_count'] + $result['check_count_by_manager_designer']; ?></td>
+                    <td><?php echo $result['data']['check_by_date']; ?></td>
+                    <td><?php echo $result['data']['check_count']; ?></td>
+                    <td><?php echo $result['data']['check_count_by_manager_designer']; ?></td>
+                    <td><?php echo $result['data']['check_reports_count']; ?></td>
+                    <td><?php echo $result['data']['check_count'] + $result['data']['check_count_by_manager_designer']; ?></td>
                 </tr>
                 </tbody>
+                <?php endif; ?>
             </table>
         </div>
     </div>
