@@ -40,6 +40,20 @@ use yii\widgets\ActiveForm;
 
         <div class="row">
             <div class="input-field col s12">
+                <input type="checkbox" id="allow_use_fields_in_others_blocks" name="ActivitySettingsBlock[allow_use_fields_in_others_blocks]" <?php echo $section->allow_use_fields_in_others_blocks == 1 ? "checked" : ""; ?> value="1">
+                <label for="allow_use_fields_in_others_blocks" style="text-decoration: none;">Использовать поля в др. блоках</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
+                <input type="checkbox" id="status" name="ActivitySettingsBlock[status]" <?php echo $section->status == 1 ? "checked" : ""; ?> value="1">
+                <label for="status" style="text-decoration: none;">Выводить в статистике</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="input-field col s12">
                 <button class="btn cyan waves-effect waves-light right" type="submit" name="action">Сохранить
                     <i class="mdi-content-send right"></i>
                 </button>
